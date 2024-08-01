@@ -15,5 +15,5 @@ Try a 10x10 grid of 6x6-pixel tiles, leaves us 4 pixels for a status bar.
 ## TODO
 
 - [x] Build scaffolding, repo, first launch.
-- [ ] Graphics and trial screen.
+- [x] Graphics and trial screen.
 - [ ] Assess platform feasibility. Evening of 4 August.

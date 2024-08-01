@@ -1,6 +1,7 @@
 title@=Upsy-Downsy
 author@=AK Sommerville
 desc@=For LowRezJam 2024. Raise and lower columns of earth to help the rabbit reach his carrot.
+iconImage#=2
 fb=64x64
 audioRate#=0
 audioChanc#=0

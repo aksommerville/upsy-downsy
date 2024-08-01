@@ -11,11 +11,13 @@
 extern struct upsy {
   int texid_tiles;
   int texid_bgbits;
+  int texid_title;
   int bgbits_dirty;
   uint8_t map[COLC*ROWC];
   int focuscol;
   double focusclock;
   int focusframe;
+  int running;
   int pvinput;
 } upsy;
 

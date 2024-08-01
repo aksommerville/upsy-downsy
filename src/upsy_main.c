@@ -27,6 +27,19 @@ int pbl_client_init(int fbw,int fbh,int rate,int chanc) {
     image_del(image);
   }
   
+  { // Load image:3 as upsy.texid_title.
+    const void *src=0;
+    int srcc=rom_get(&src,PBL_TID_image,3);
+    struct image *image=image_decode(src,srcc);
+    if (!image) {
+      pbl_log("Failed to decode image:3");
+      return -1;
+    }
+    if (image_force_rgba(image)<0) return -1;
+    if ((upsy.texid_title=gfx_texture_new_rgba(image->w,image->h,image->stride,image->v,image_get_pixels_length(image)))<0) return -1;
+    image_del(image);
+  }
+  
   { // Generate bgbits.
     if ((upsy.texid_bgbits=gfx_texture_new(TILESIZE*COLC,TILESIZE*ROWC))<0) return -1;
     upsy.bgbits_dirty=1;
@@ -44,6 +57,7 @@ int pbl_client_init(int fbw,int fbh,int rate,int chanc) {
   upsy.map[3*COLC+6]=0x0a;
   upsy.map[3*COLC+7]=0x0a;
   upsy.focuscol=COLC>>1;
+  upsy.running=0;
   
   return 0;
 }
@@ -98,10 +112,14 @@ void pbl_client_update(double elapsed,int in1,int in2,int in3,int in4) {
   }
   in1|=in2|in3|in4;
   if (in1!=upsy.pvinput) {
-    if ((in1&PBL_BTN_LEFT)&&!(upsy.pvinput&PBL_BTN_LEFT)) upsy_move_focus(-1);
-    if ((in1&PBL_BTN_RIGHT)&&!(upsy.pvinput&PBL_BTN_RIGHT)) upsy_move_focus(1);
-    if ((in1&PBL_BTN_UP)&&!(upsy.pvinput&PBL_BTN_UP)) upsy_change_world(-1);
-    if ((in1&PBL_BTN_DOWN)&&!(upsy.pvinput&PBL_BTN_DOWN)) upsy_change_world(1);
+    if (upsy.running) {
+      if ((in1&PBL_BTN_LEFT)&&!(upsy.pvinput&PBL_BTN_LEFT)) upsy_move_focus(-1);
+      if ((in1&PBL_BTN_RIGHT)&&!(upsy.pvinput&PBL_BTN_RIGHT)) upsy_move_focus(1);
+      if ((in1&PBL_BTN_UP)&&!(upsy.pvinput&PBL_BTN_UP)) upsy_change_world(-1);
+      if ((in1&PBL_BTN_DOWN)&&!(upsy.pvinput&PBL_BTN_DOWN)) upsy_change_world(1);
+    } else {
+      if ((in1&PBL_BTN_SOUTH)&&!(upsy.pvinput&PBL_BTN_SOUTH)) upsy.running=1;
+    }
     upsy.pvinput=in1;
   }
 }
@@ -114,6 +132,11 @@ void *pbl_client_synth(int samplec) {
  */
 
 void *pbl_client_render() {
+
+  if (!upsy.running) {
+    gfx_blit(0,upsy.texid_title,0,0,0,0,64,64,0);
+    return gfx_finish();
+  }
 
   // Redraw grid if dirty. This will happen every time we move earth, drawing the whole thing redundantly (it's fine).
   if (upsy.bgbits_dirty) {

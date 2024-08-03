@@ -7,6 +7,7 @@ int prepare_scene(int sceneid) {
   //TODO Load scenes from a resource.
   //...define that resource type. etc etc...
   upsy.sceneid=sceneid;
+  upsy_play_song(1);
   
   memset(upsy.map,0,sizeof(upsy.map));
   memset(upsy.map+6*COLC,0x03,COLC);

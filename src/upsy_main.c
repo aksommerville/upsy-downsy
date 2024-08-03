@@ -24,15 +24,26 @@ static int load_image(int imageid) {
 
 int pbl_client_init(int fbw,int fbh,int rate,int chanc) {
   if ((fbw!=64)||(fbh!=64)) return -1;
-  pbl_set_synth_limit(0);//TODO We do want audio eventually.
+  pbl_set_synth_limit(sizeof(upsy.audio)/sizeof(upsy.audio[0]));
   if (rom_init()<0) return -1;
   if (gfx_init(fbw,fbh)<0) return -1;
+  if (lofi_init(rate,chanc)<0) return -1;
   
   if ((upsy.texid_tiles=load_image(1))<0) return -1;
   if ((upsy.texid_title=load_image(3))<0) return -1;
   if ((upsy.texid_bgbits=gfx_texture_new(TILESIZE*COLC,TILESIZE*ROWC))<0) return -1;
   
+  lofi_wave_init_sine(0);
+  lofi_wave_init_square(1);
+  lofi_wave_init_saw(2);
+  lofi_wave_init_triangle(3);
+  { uint8_t coefv[]={0x80,0x40,0x20,0x10,0x08}; lofi_wave_init_harmonics(4,coefv,sizeof(coefv)); }
+  { uint8_t coefv[]={0xa0,0x00,0x40,0x00,0x10}; lofi_wave_init_harmonics(5,coefv,sizeof(coefv)); }
+  { uint8_t coefv[]={0x40,0x50,0x30,0x10,0x08,0x10,0x08,0x10}; lofi_wave_init_harmonics(6,coefv,sizeof(coefv)); }
+  { uint8_t coefv[]={0xff,0xc0,0x80,0x40,0x20,0x10}; lofi_wave_init_harmonics(7,coefv,sizeof(coefv)); }
+  
   upsy.sceneid=0;
+  upsy_play_song(4);
   //if (prepare_scene(1)<0) return -1;
   
   return 0;
@@ -63,7 +74,8 @@ void pbl_client_update(double elapsed,int in1,int in2,int in3,int in4) {
 }
 
 void *pbl_client_synth(int samplec) {
-  return 0;//TODO Synthesizer. Write a bare bones synth for general use, in pebble repo.
+  lofi_update(upsy.audio,samplec);
+  return upsy.audio;
 }
 
 void *pbl_client_render() {
@@ -73,4 +85,12 @@ void *pbl_client_render() {
     gfx_blit(0,upsy.texid_title,0,0,0,0,64,64,0);
   }
   return gfx_finish();
+}
+
+void upsy_play_song(int songid) {
+  if (songid==upsy.songid) return;
+  const void *serial=0;
+  int serialc=rom_get(&serial,PBL_TID_song,songid);
+  lofi_play_song(serial,serialc);
+  upsy.songid=songid;
 }

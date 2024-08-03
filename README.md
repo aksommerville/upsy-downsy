@@ -16,11 +16,12 @@ Try a 10x10 grid of 6x6-pixel tiles, leaves us 4 pixels for a status bar.
 
 - [x] Build scaffolding, repo, first launch.
 - [x] Graphics and trial screen.
-- [ ] Assess platform feasibility. Evening of 4 August.
+- [x] Background music.
+- [ ] Refine background music. Currently all one wave, and probly we should fine-tune the Off times.
+- [x] Assess platform feasibility. Evening of 4 August. -- feasible, do it.
 - [ ] Pull model layer out of upsy_main.c, start doing it right.
 - [ ] Join/break neighbors on earth movement.
 - [ ] Rabbit walks only when standing on flat.
-- [ ] Rabbit rolls down inclines.
 - [ ] Rabbit falls if you pull the ground out from under him.
 - [ ] Eat the carrot.
 - [ ] Kill rabbit if you smash him.

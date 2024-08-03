@@ -4,6 +4,7 @@
 #include "pebble/pebble.h"
 #include "image/image.h"
 #include "gfx/gfx.h"
+#include "lofi/lofi.h"
 #include "util/rom.h"
 #include "stdlib/egg-stdlib.h"
 #include <stdint.h>
@@ -66,6 +67,8 @@ extern struct upsy {
     int x,y; // tiles
   } carrot;
   
+  int16_t audio[1024];
+  int songid;
 } upsy;
 
 int prepare_scene(int sceneid);
@@ -77,5 +80,7 @@ void render_scene();
 
 int tile_is_dirt(uint8_t tileid);
 int tile_is_sky(uint8_t tileid);
+
+void upsy_play_song(int songid);
 
 #endif

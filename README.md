@@ -13,16 +13,17 @@ Try a 10x10 grid of 6x6-pixel tiles, leaves us 4 pixels for a status bar.
 
 ## TODO
 
-- [ ] Refine background music. Currently all one wave, and probly we should fine-tune the Off times.
+- ASAP:
+- [ ] Platforms.
+- [x] Hammer.
+- [ ] Water.
+- [ ] Crocodile. Moves just like the rabbit, keep them apart.
+- [ ] Hawk. Eats rabbit if he stands still.
+- [ ] Static horizontal flamethrower.
+- After game logic stable:
 - [ ] Sound effects.
-- [x] Eat the carrot.
-- [x] Stage storage.
-- Other gimmicks:
-- - [ ] Hammer.
-- - [ ] Water.
-- - [ ] Rolling balls.
-- - [ ] Crocodile. Moves just like the rabbit, keep them apart.
-- - [ ] Hawk. Eats rabbit if he stands still.
-- - [ ] Static horizontal flamethrower.
+- [ ] Refine background music. Currently all one wave, and probly we should fine-tune the Off times.
+- [ ] Final scenes.
 - [ ] Proper content for status bar.
 - [ ] Scorekeeping.
+- [ ] Decoration and verbiage for Itch page.

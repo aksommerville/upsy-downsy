@@ -14,8 +14,16 @@ void focus_shift(int d) {
       upsy_sfx_reject_grow();
       return;
     }
+    // Under the hammer, we can only grow to the second row.
+    if ((upsy.focus.x>=upsy.hammer.x)&&(upsy.focus.x<upsy.hammer.x+upsy.hammer.w)) {
+      if (upsy.map.dirt[upsy.focus.x]>=ROWC-1) {
+        upsy_sfx_reject_grow();
+        return;
+      }
+    }
     upsy_sfx_grow();
     upsy.map.dirt[upsy.focus.x]++;
+    
   } else { // down
     if (!upsy.map.dirt[upsy.focus.x]) {
       upsy_sfx_reject_shrink();

@@ -19,6 +19,7 @@ struct rabbit {
 };
 
 void rabbit_dirt_changed();
+void rabbit_squash();
 
 void rabbit_update(double elapsed);
 

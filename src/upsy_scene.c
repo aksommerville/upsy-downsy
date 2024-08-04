@@ -11,10 +11,17 @@ static int read_scene_args(int *argc,int *argv,int arga,const char *src,int srcc
     if ((unsigned char)src[srcp]<=0x20) { srcp++; continue; }
     if ((*argc)>=arga) return -1;
     argv[*argc]=0;
+    int positive=1;
+    if (src[srcp]=='-') {
+      positive=0;
+      srcp++;
+    }
     while ((srcp<srcc)&&(src[srcp]>='0')&&(src[srcp]<='9')) {
       argv[*argc]*=10;
       argv[*argc]+=src[srcp++]-'0';
+      if (argv[*argc]>999999) return -1; // arbitrary limit, easier than proper overflow checking
     }
+    if (!positive) argv[*argc]*=-1;
     (*argc)++;
     if (srcp>=srcc) break;
     if ((unsigned char)src[srcp]>0x20) return -1;
@@ -75,6 +82,18 @@ static int decode_and_apply_scene(const char *src,int srcc) {
       continue;
     }
     
+    if ((kwc==6)&&!memcmp(kw,"hammer",6)) {
+      ASSERTARGC(4)
+      upsy.hammer.x=argv[0];
+      upsy.hammer.w=argv[1];
+      if ((upsy.hammer.x<0)||(upsy.hammer.w<0)||(upsy.hammer.w==1)||(upsy.hammer.x+upsy.hammer.w>COLC)) return -1;
+      if ((upsy.hammer.period=argv[2]/1000.0)<1.0) return -1;
+      upsy.hammer.clock=argv[3]/1000.0;
+      upsy.hammer.h=1.0;
+      upsy.hammer.dh=0.0;
+      continue;
+    }
+    
     pbl_log("Unexpected command '%.*s' in scene:%d",kwc,kw,upsy.sceneid);
     return -1;
     #undef ARG
@@ -101,6 +120,7 @@ int prepare_scene(int sceneid) {
   upsy.rabbit.dx=1.0;
   upsy.rabbit.state=RABBIT_STATE_INIT;
   upsy.focus.x=COLC>>1;
+  upsy.hammer.w=0;
   
   if (decode_and_apply_scene(src,srcc)<0) {
     pbl_log("Failed to decode scene:%d",sceneid);
@@ -117,16 +137,19 @@ int prepare_scene(int sceneid) {
 void update_scene(double elapsed) {
   focus_update(elapsed);
   rabbit_update(elapsed);
+  hammer_update(elapsed);
 }
 
 /* Render scene.
  */
  
 void render_scene() {
+
+  // The major things.
   map_render();
   rabbit_render();
+  hammer_render();
   focus_render();
-  //TODO other sprites
 
   // Blot margins. Important to do this after drawing the proper scene, so sprites can't touch the margins.
   gfx_fill_rect(0,0,0,SCREENW,SCENEY,0);

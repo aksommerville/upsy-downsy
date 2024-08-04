@@ -22,6 +22,20 @@ static double rabbit_measure_freedom(int dx,int dy) {
   
   /* Consider solid bodies other than dirt. Surely there will be platforms and such. TODO
    */
+  if (dy<0) {
+    if ((upsy.rabbit.x>=upsy.hammer.x)&&(upsy.rabbit.x<=upsy.hammer.x+upsy.hammer.w)) {
+      double distance=upsy.rabbit.y-upsy.hammer.h;
+      if (distance<freedom) freedom=distance;
+    }
+  } else if (upsy.hammer.h>upsy.rabbit.y) {
+    if (dx<0) {
+      double distance=upsy.rabbit.x-0.45-(double)(upsy.hammer.x+upsy.hammer.w);
+      if ((distance>-1.0)&&(distance<freedom)) freedom=distance;
+    } else if (dx>0) {
+      double distance=(double)upsy.hammer.x-upsy.rabbit.x-0.45;
+      if ((distance>-1.0)&&(distance<freedom)) freedom=distance;
+    }
+  }
    
   /* Consider dirt.
    */
@@ -95,7 +109,7 @@ static void rabbit_examine_road() {
   }
 }
 
-/* Rabbit has been squash. Blood will appear at his feet.
+/* Rabbit has been squashed. Blood will appear at his feet.
  * Find the column that squashed me, and center on it, so we don't show blood dripping down from nowhere.
  */
  
@@ -113,6 +127,18 @@ static void rabbit_amend_position_for_death() {
   }
 }
 
+/* Kill rabbit.
+ */
+ 
+void rabbit_squash() {
+  upsy_sfx_squash();
+  upsy_play_song(3);
+  rabbit_amend_position_for_death();
+  upsy.rabbit.state=RABBIT_STATE_DEAD;
+  upsy.rabbit.frame=0;
+  upsy.rabbit.animclock=0.200;
+}
+
 /* Dirt changed.
  */
  
@@ -127,12 +153,7 @@ void rabbit_dirt_changed() {
   } else if (yfree<0.0) {
     upsy.rabbit.y+=yfree;
     if (rabbit_measure_freedom(0,-1)<-0.5) {
-      upsy_sfx_squash();
-      upsy_play_song(3);
-      rabbit_amend_position_for_death();
-      upsy.rabbit.state=RABBIT_STATE_DEAD;
-      upsy.rabbit.frame=0;
-      upsy.rabbit.animclock=0.200;
+      rabbit_squash();
       return;
     }
     rabbit_examine_road();

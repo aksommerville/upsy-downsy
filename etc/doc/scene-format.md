@@ -13,3 +13,4 @@ Line begins with a keyword, followed by arguments, which can only be decimal int
 | rabbit      | `X Y` 0..9 |
 | carrot      | `X Y` 0..9 |
 | song        | `SONGID` |
+| hammer      | `X W PERIOD PHASE` Times in ms. Min PERIOD 1000. |

@@ -29,6 +29,7 @@
 #include "map.h"
 #include "focus.h"
 #include "rabbit.h"
+#include "hammer.h"
 #include <stdint.h>
 
 extern struct upsy {
@@ -46,6 +47,7 @@ extern struct upsy {
   struct map map;
   struct focus focus;
   struct rabbit rabbit;
+  struct hammer hammer;
 } upsy;
 
 int prepare_scene(int sceneid);
@@ -62,5 +64,6 @@ static void upsy_sfx_grow() {}
 static void upsy_sfx_shrink() {}
 static void upsy_sfx_squash() {}
 static void upsy_sfx_victory() {}
+static void upsy_sfx_hammer_smash() {}
 
 #endif

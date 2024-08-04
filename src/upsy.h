@@ -15,7 +15,7 @@
 #define SCENEX 2
 #define SCENEY 4
 
-#define UPSY_VICTORY_TIME 3.0
+#define UPSY_VICTORY_TIME 2.0
 
 // We can have pbltool generate a header with macros for the custom types and resource names, but meh.
 #define PBL_TID_scene 16
@@ -32,6 +32,7 @@
 #include "hammer.h"
 #include "crocodile.h"
 #include "fireworks.h"
+#include "hawk.h"
 #include <stdint.h>
 
 extern struct upsy {
@@ -52,6 +53,7 @@ extern struct upsy {
   struct hammer hammer;
   struct crocodile crocodile;
   struct fireworks fireworks;
+  struct hawk hawk;
 } upsy;
 
 int prepare_scene(int sceneid);

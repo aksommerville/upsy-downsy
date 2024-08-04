@@ -131,7 +131,6 @@ static void rabbit_amend_position_for_death() {
  */
  
 void rabbit_squash() {
-  pbl_log("%s rabbit=%f,%f",__func__,upsy.rabbit.x,upsy.rabbit.y);
   upsy_sfx_squash();
   upsy_play_song(3);
   fireworks_start(upsy.rabbit.x,upsy.rabbit.y);

@@ -105,6 +105,16 @@ static int decode_and_apply_scene(const char *src,int srcc) {
       continue;
     }
     
+    if ((kwc==4)&&!memcmp(kw,"hawk",4)) {
+      ASSERTARGC(0)
+      upsy.hawk.present=1;
+      upsy.hawk.x=COLC*0.5;
+      upsy.hawk.y=0.5;
+      upsy.hawk.dx=1.5;
+      upsy.hawk.attack=0;
+      continue;
+    }
+    
     pbl_log("Unexpected command '%.*s' in scene:%d",kwc,kw,upsy.sceneid);
     return -1;
     #undef ARG
@@ -134,6 +144,7 @@ int prepare_scene(int sceneid) {
   upsy.hammer.w=0;
   upsy.crocodile.present=0;
   fireworks_clear();
+  upsy.hawk.present=0;
   
   if (decode_and_apply_scene(src,srcc)<0) {
     pbl_log("Failed to decode scene:%d",sceneid);
@@ -153,6 +164,7 @@ void update_scene(double elapsed) {
   hammer_update(elapsed);
   crocodile_update(elapsed);
   fireworks_update(elapsed);
+  hawk_update(elapsed);
 }
 
 /* Render scene.
@@ -165,6 +177,7 @@ void render_scene() {
   rabbit_render();
   crocodile_render();
   hammer_render();
+  hawk_render();
   fireworks_render();
   focus_render();
 

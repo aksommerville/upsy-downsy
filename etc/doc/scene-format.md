@@ -15,3 +15,4 @@ Line begins with a keyword, followed by arguments, which can only be decimal int
 | song        | `SONGID` |
 | hammer      | `X W PERIOD PHASE` Times in ms. Min PERIOD 1000. |
 | crocodile   | `X Y` |
+| hawk        | (none) |

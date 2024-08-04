@@ -22,6 +22,7 @@ OFILES_WASM:=$(patsubst src/%.c,mid/wasm/%.o,$(CFILES))
 OFILES_NATIVE:=$(patsubst src/%.c,mid/native/%.o,$(filter-out src/stdlib/%,$(CFILES)))
 LIB_WASM:=mid/data/code.wasm
 LIB_NATIVE:=mid/libupsy.a
+-include $(OFILES_WASM:.o=.d) $(OFILES_NATIVE:.o=.d)
 
 mid/wasm/%.o:src/%.c;$(PRECMD) $(CC_WASM) -o$@ $<
 mid/native/%.o:src/%.c;$(PRECMD) $(CC_NATIVE) -o$@ $<

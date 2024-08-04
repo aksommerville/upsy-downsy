@@ -51,6 +51,7 @@ void focus_update(double elapsed) {
  */
  
 void focus_render() {
+  if (upsy.rabbit.state==RABBIT_STATE_DEAD) return;
   int dstx=SCENEX+upsy.focus.x*TILESIZE;
   int srcx=upsy.focus.frame*TILESIZE;
   int srcy=TILESIZE*4; // middle

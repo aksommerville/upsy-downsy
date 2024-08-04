@@ -52,7 +52,7 @@ int pbl_client_init(int fbw,int fbh,int rate,int chanc) {
 void pbl_client_update(double elapsed,int in1,int in2,int in3,int in4) {
   in1|=in2|in3|in4;
   if (in1!=upsy.pvinput) {
-    if (upsy.sceneid) {
+    if (upsy.sceneid&&(upsy.rabbit.state!=RABBIT_STATE_DEAD)) {
       if ((in1&PBL_BTN_LEFT)&&!(upsy.pvinput&PBL_BTN_LEFT)) focus_move(-1);
       if ((in1&PBL_BTN_RIGHT)&&!(upsy.pvinput&PBL_BTN_RIGHT)) focus_move(1);
       if ((in1&PBL_BTN_UP)&&!(upsy.pvinput&PBL_BTN_UP)) focus_shift(-1);

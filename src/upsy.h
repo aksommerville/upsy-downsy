@@ -54,5 +54,6 @@ static void upsy_sfx_reject_grow() {}
 static void upsy_sfx_reject_shrink() {}
 static void upsy_sfx_grow() {}
 static void upsy_sfx_shrink() {}
+static void upsy_sfx_squash() {}
 
 #endif

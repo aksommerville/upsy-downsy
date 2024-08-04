@@ -66,11 +66,11 @@ static double rabbit_measure_road(int dx) {
   int extent=ROWC-(int)upsy.rabbit.y-1;
   double road;
   if (dx<0) {
-    int solcol=(int)upsy.rabbit.x;
+    int solcol=(int)(upsy.rabbit.x-0.45);
     while ((solcol>=0)&&(upsy.map.dirt[solcol]==extent)) solcol--;
     road=upsy.rabbit.x-0.45-(solcol+1.0);
   } else {
-    int solcol=(int)upsy.rabbit.x;
+    int solcol=(int)(upsy.rabbit.x+0.45);
     while ((solcol<COLC)&&(upsy.map.dirt[solcol]==extent)) solcol++;
     road=(double)solcol-upsy.rabbit.x-0.45;
   }
@@ -95,10 +95,29 @@ static void rabbit_examine_road() {
   }
 }
 
+/* Rabbit has been squash. Blood will appear at his feet.
+ * Find the column that squashed me, and center on it, so we don't show blood dripping down from nowhere.
+ */
+ 
+static void rabbit_amend_position_for_death() {
+  int footrow=(int)(upsy.rabbit.y+1.0);
+  int footextent=ROWC-footrow;
+  int nearcol=(int)(upsy.rabbit.x);
+  const uint8_t *b=upsy.map.dirt;
+  if ((nearcol>=0)&&(nearcol<COLC)&&(upsy.map.dirt[nearcol]==footextent)) {
+    upsy.rabbit.x=nearcol+0.5;
+  } else if ((nearcol>=1)&&(upsy.map.dirt[nearcol-1]==footextent)) {
+    upsy.rabbit.x=nearcol-0.5;
+  } else if ((nearcol<COLC-1)&&(upsy.map.dirt[nearcol+1]==footextent)) {
+    upsy.rabbit.x=nearcol+1.5;
+  }
+}
+
 /* Dirt changed.
  */
  
 void rabbit_dirt_changed() {
+  if (upsy.rabbit.state==RABBIT_STATE_DEAD) return;
   
   double yfree=rabbit_measure_freedom(0,1);
   
@@ -107,11 +126,16 @@ void rabbit_dirt_changed() {
   
   } else if (yfree<0.0) {
     upsy.rabbit.y+=yfree;
-    //TODO Check for squash.
+    if (rabbit_measure_freedom(0,-1)<-0.5) {
+      upsy_sfx_squash();
+      upsy_play_song(3);
+      rabbit_amend_position_for_death();
+      upsy.rabbit.state=RABBIT_STATE_DEAD;
+      upsy.rabbit.frame=0;
+      upsy.rabbit.animclock=0.200;
+      return;
+    }
     rabbit_examine_road();
-  
-  } else if (rabbit_measure_freedom(0,1)>0.0) {
-    upsy.rabbit.state=RABBIT_STATE_FALL;
     
   } else {
     rabbit_examine_road();
@@ -123,10 +147,26 @@ void rabbit_dirt_changed() {
  
 void rabbit_update(double elapsed) {
   if ((upsy.rabbit.animclock-=elapsed)<=0.0) {
-    upsy.rabbit.animclock+=0.250;
-    if (++(upsy.rabbit.frame)>=4) upsy.rabbit.frame=0;
+    switch (upsy.rabbit.state) {
+      case RABBIT_STATE_DEAD: {
+          upsy.rabbit.animclock+=0.200;
+          if (++(upsy.rabbit.frame)>=6) upsy.rabbit.frame=5;
+        } break;
+      default: {
+          upsy.rabbit.animclock+=0.250;
+          if (++(upsy.rabbit.frame)>=4) upsy.rabbit.frame=0;
+        }
+    }
   }
   switch (upsy.rabbit.state) {
+  
+    case RABBIT_STATE_INIT: {
+        if (rabbit_measure_freedom(0,1)>0.0) {
+          upsy.rabbit.state=RABBIT_STATE_FALL;
+        } else {
+          rabbit_examine_road();
+        }
+      } break;
   
     case RABBIT_STATE_WALK: {
         if (!upsy.rabbit.dx) upsy.rabbit.dx=RABBIT_WALK_SPEED;
@@ -152,17 +192,6 @@ void rabbit_update(double elapsed) {
         if (yfree<=0.0) {
           upsy.rabbit.y+=yfree;
           rabbit_examine_road();
-          /*
-          double lfree=rabbit_measure_road(-1);
-          double rfree=rabbit_measure_road(1);
-          pbl_log("%s road=%f,%f",__func__,lfree,rfree);
-          if (lfree+rfree>2.0) {
-            upsy.rabbit.state=RABBIT_STATE_WALK;
-            upsy.rabbit.xlo=upsy.rabbit.x-lfree;
-            upsy.rabbit.xhi=upsy.rabbit.x+rfree;
-          } else {
-            upsy.rabbit.state=RABBIT_STATE_CHILL;
-          }*/
         }
       } break;
   }
@@ -175,7 +204,15 @@ void rabbit_render() {
   int dstx=SCENEX+((int)(upsy.rabbit.x*TILESIZE))-(TILESIZE>>1);
   int dsty=SCENEY+((int)(upsy.rabbit.y*TILESIZE))-(TILESIZE>>1);
   uint8_t tileid=0x17;
-  if (upsy.rabbit.state==RABBIT_STATE_WALK) tileid+=upsy.rabbit.frame;
+  switch (upsy.rabbit.state) {
+    case RABBIT_STATE_DEAD: {
+        tileid=0x28+upsy.rabbit.frame;
+        dsty+=TILESIZE;
+      } break;
+    case RABBIT_STATE_WALK: {
+        tileid+=upsy.rabbit.frame;
+      } break;
+  }
   int srcx=(tileid&15)*TILESIZE;
   int srcy=(tileid>>4)*TILESIZE;
   uint8_t xform=0;

@@ -19,6 +19,7 @@ int prepare_scene(int sceneid) {
   upsy.rabbit.x=(COLC>>1)+0.5;
   upsy.rabbit.y=5.5;
   upsy.rabbit.dx=1.0;
+  upsy.rabbit.state=RABBIT_STATE_INIT;
   
   //TODO sprites
   

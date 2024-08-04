@@ -45,7 +45,7 @@ static int decode_and_apply_scene(const char *src,int srcc) {
     }
     const char *kw=src+srcp;
     int kwc=0;
-    while ((srcp<srcc)&&((unsigned char)src[srcp++]>0x20)) kwc++;
+    while ((srcp<srcc)&&((unsigned char)src[srcp]>0x20)) { kwc++; srcp++; }
     int argv[16];
     int argc=0;
     int err=read_scene_args(&argc,argv,sizeof(argv)/sizeof(argv[0]),src+srcp,srcc-srcp);
@@ -115,6 +115,20 @@ static int decode_and_apply_scene(const char *src,int srcc) {
       continue;
     }
     
+    if ((kwc==8)&&!memcmp(kw,"platform",8)) {
+      ASSERTARGC(3)
+      map_add_platform(argv[0],argv[1],argv[2],0x0f);
+      continue;
+    }
+    
+    if ((kwc==5)&&!memcmp(kw,"flame",5)) {
+      ASSERTARGC(3)
+      if (map_add_flamethrower(argv[0],argv[1],argv[2])>=0) {
+        flames_add(argv[0],argv[1],argv[2]);
+      }
+      continue;
+    }
+    
     pbl_log("Unexpected command '%.*s' in scene:%d",kwc,kw,upsy.sceneid);
     return -1;
     #undef ARG
@@ -138,6 +152,7 @@ int prepare_scene(int sceneid) {
   
   memset(upsy.map.dirt,0,sizeof(upsy.map.dirt));
   upsy.map.dirty=1;
+  upsy.map.platformc=0;
   upsy.rabbit.dx=1.0;
   upsy.rabbit.state=RABBIT_STATE_INIT;
   upsy.focus.x=COLC>>1;
@@ -145,6 +160,7 @@ int prepare_scene(int sceneid) {
   upsy.crocodile.present=0;
   fireworks_clear();
   upsy.hawk.present=0;
+  flames_clear();
   
   if (decode_and_apply_scene(src,srcc)<0) {
     pbl_log("Failed to decode scene:%d",sceneid);
@@ -165,6 +181,7 @@ void update_scene(double elapsed) {
   crocodile_update(elapsed);
   fireworks_update(elapsed);
   hawk_update(elapsed);
+  flames_update(elapsed);
 }
 
 /* Render scene.
@@ -178,6 +195,7 @@ void render_scene() {
   crocodile_render();
   hammer_render();
   hawk_render();
+  flames_render();
   fireworks_render();
   focus_render();
 

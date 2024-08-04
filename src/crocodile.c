@@ -20,15 +20,9 @@ static int crocodile_collision(int solid_only) {
   if (xa<0) xa=0;
   if (xz>=COLC) xz=COLC-1;
   if (xz<xa) xz=xa;
-  int footextent=ROWC-y-1;
-  if (solid_only) {
-    int i=xa; for (;i<=xz;i++) {
-      if (upsy.map.dirt[i]>footextent) return 1;
-    }
-  } else {
-    int i=xa; for (;i<=xz;i++) {
-      if (upsy.map.dirt[i]!=footextent) return 1;
-    }
+  if (cell_solid(xa,y)||cell_solid(xz,y)) return 1;
+  if (!solid_only&&(y<ROWC-1)) {
+    if (!cell_solid(xa,y+1)||!cell_solid(xz,y+1)) return 1;
   }
 
   return 0;

@@ -11,6 +11,64 @@ int tile_is_sky(uint8_t tileid) {
   return (tileid<=0x02);
 }
 
+int cell_solid(int x,int y) {
+  if ((x<0)||(y<0)||(x>=COLC)||(y>=ROWC)) return 0;
+  const struct platform *platform=upsy.map.platformv;
+  int i=upsy.map.platformc;
+  for (;i-->0;platform++) {
+    if (platform->y!=y) continue;
+    if (x<platform->x) continue;
+    if (x>=platform->x+platform->w) continue;
+    return 1;
+  }
+  int extent=ROWC-y-1;
+  if (upsy.map.dirt[x]>extent) return 1;
+  return 0;
+}
+
+int cell_solid_below_topsoil(int x,int y) {
+  if ((x<0)||(y<0)||(x>=COLC)||(y>=ROWC)) return 0;
+  const struct platform *platform=upsy.map.platformv;
+  int i=upsy.map.platformc;
+  for (;i-->0;platform++) {
+    if (platform->y!=y) continue;
+    if (x<platform->x) continue;
+    if (x>=platform->x+platform->w) continue;
+    return 1;
+  }
+  int extent=ROWC-y;
+  if (upsy.map.dirt[x]>extent) return 1;
+  return 0;
+}
+
+/* Add platform.
+ */
+ 
+int map_add_platform(int x,int y,int w,int tileid) {
+  if (upsy.map.platformc>=PLATFORM_LIMIT) return -1;
+  if ((x<0)||(w<1)||(x>COLC-w)||(y<0)||(y>=ROWC)) return -1;
+  struct platform *platform=upsy.map.platformv+upsy.map.platformc++;
+  platform->x=x;
+  platform->y=y;
+  platform->w=w;
+  platform->tileid=tileid;
+  platform->xform=0;
+  return 0;
+}
+
+int map_add_flamethrower(int x,int y,int w) {
+  if (upsy.map.platformc>=PLATFORM_LIMIT) return -1;
+  if ((x<0)||(x>=COLC)||!w||(y<0)||(y>=ROWC)) return -1;
+  struct platform *platform=upsy.map.platformv+upsy.map.platformc++;
+  platform->x=x;
+  platform->y=y;
+  platform->w=1;
+  platform->tileid=0x65;
+  if (w<0) platform->xform=GFX_XFORM_XREV;
+  else platform->xform=0;
+  return 0;
+}
+
 /* Render.
  */
  
@@ -66,6 +124,18 @@ void map_render() {
   if (upsy.map.dirty) {
     upsy.map.dirty=0;
     gfx_clear(upsy.texid_bgbits,0xff954f3c);
+    const struct platform *platform=upsy.map.platformv;
+    int i=upsy.map.platformc;
+    for (;i-->0;platform++) {
+      int dstx=platform->x*TILESIZE;
+      int dsty=platform->y*TILESIZE;
+      int xi=platform->w;
+      int srcx=(platform->tileid&15)*TILESIZE;
+      int srcy=(platform->tileid>>4)*TILESIZE;
+      for (;xi-->0;dstx+=TILESIZE) {
+        gfx_blit(upsy.texid_bgbits,upsy.texid_tiles,dstx,dsty,srcx,srcy,TILESIZE,TILESIZE,platform->xform);
+      }
+    }
     int dstx=0,col=0;
     for (;col<COLC;col++,dstx+=TILESIZE) {
       int dsty=(ROWC-1)*TILESIZE;

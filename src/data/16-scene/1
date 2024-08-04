@@ -5,3 +5,6 @@ song 1
 hammer 1 4 4000 0
 crocodile 2 6
 hawk
+platform 2 5 3
+flame 5 5 3
+flame 1 5 -1

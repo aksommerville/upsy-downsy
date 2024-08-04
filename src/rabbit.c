@@ -41,9 +41,9 @@ static double rabbit_measure_freedom(int dx,int dy) {
    */
   if (dx<0) {
     int col=(int)(upsy.rabbit.x-0.5);
-    int minextent=ROWC-(int)(upsy.rabbit.y+0.45);
+    int row=(int)upsy.rabbit.y;
     while (col>=0) {
-      if (upsy.map.dirt[col]>=minextent) {
+      if (cell_solid(col,row)) {
         double distance=upsy.rabbit.x-0.5-(col+1.0);
         if (distance<freedom) freedom=distance;
         break;
@@ -52,9 +52,9 @@ static double rabbit_measure_freedom(int dx,int dy) {
     }
   } else if (dx>0) {
     int col=(int)(upsy.rabbit.x+0.5);
-    int minextent=ROWC-(int)(upsy.rabbit.y+0.45);
+    int row=(int)upsy.rabbit.y;
     while (col<COLC) {
-      if (upsy.map.dirt[col]>=minextent) {
+      if (cell_solid(col,row)) {
         double distance=col-upsy.rabbit.x-0.5;
         if (distance<freedom) freedom=distance;
         break;
@@ -67,9 +67,29 @@ static double rabbit_measure_freedom(int dx,int dy) {
     if (xl<0) xl=0;
     if (xr>=COLC) xr=COLC-1;
     if (xr<xl) xr=xl;
-    int extent=(upsy.map.dirt[xl]>upsy.map.dirt[xr])?upsy.map.dirt[xl]:upsy.map.dirt[xr];
-    double floor=(double)(ROWC-extent);
-    double distance=floor-upsy.rabbit.y-0.5;
+    double distance=999.0;
+    int row=(int)upsy.rabbit.y;
+    for (;row<ROWC;row++) {
+      if (cell_solid(xl,row)||cell_solid(xr,row)) {
+        distance=row-upsy.rabbit.y-0.5;
+        break;
+      }
+    }
+    if (distance<freedom) freedom=distance;
+  } else if (dy<0) { // We can't be below dirt, but cell_solid() also tracks platforms.
+    int xl=(int)(upsy.rabbit.x-0.45);
+    int xr=(int)(upsy.rabbit.x+0.45);
+    if (xl<0) xl=0;
+    if (xr>=COLC) xr=COLC-1;
+    if (xr<xl) xr=xl;
+    double distance=999.0;
+    int row=(int)upsy.rabbit.y;
+    for (;row>=0;row--) {
+      if (cell_solid(xl,row)||cell_solid(xr,row)) {
+        distance=upsy.rabbit.y-0.5-(row+1.0);
+        break;
+      }
+    }
     if (distance<freedom) freedom=distance;
   }
   
@@ -77,15 +97,15 @@ static double rabbit_measure_freedom(int dx,int dy) {
 }
 
 static double rabbit_measure_road(int dx) {
-  int extent=ROWC-(int)upsy.rabbit.y-1;
+  int row=(int)upsy.rabbit.y+1;
   double road;
   if (dx<0) {
     int solcol=(int)(upsy.rabbit.x-0.45);
-    while ((solcol>=0)&&(upsy.map.dirt[solcol]==extent)) solcol--;
+    while ((solcol>=0)&&cell_solid(solcol,row)) solcol--;
     road=upsy.rabbit.x-0.45-(solcol+1.0);
   } else {
     int solcol=(int)(upsy.rabbit.x+0.45);
-    while ((solcol<COLC)&&(upsy.map.dirt[solcol]==extent)) solcol++;
+    while ((solcol<COLC)&&cell_solid(solcol,row)) solcol++;
     road=(double)solcol-upsy.rabbit.x-0.45;
   }
   double free=rabbit_measure_freedom(dx,0);
@@ -145,6 +165,19 @@ void rabbit_squash() {
  
 void rabbit_dirt_changed() {
   if (upsy.rabbit.state==RABBIT_STATE_DEAD) return;
+  
+  // If the dirt changed and we are inside that column, shuffle to its center.
+  // Otherwise we catch on corners, it's unpleasant.
+  // In fact, do the same if we're adjacent to the focus column too, same reasoning.
+  double focusx=upsy.focus.x+0.5;
+  double focusd=upsy.rabbit.x-focusx;
+  if ((focusd>-0.5)&&(focusd<0.5)) {
+    upsy.rabbit.x=upsy.focus.x+0.5;
+  } else if ((focusd>-1.25)&&(focusd<=-0.5)) {
+    upsy.rabbit.x=upsy.focus.x-0.5;
+  } else if ((focusd>=0.5)&&(focusd<1.25)) {
+    upsy.rabbit.x=upsy.focus.x+1.5;
+  }
   
   double yfree=rabbit_measure_freedom(0,1);
   

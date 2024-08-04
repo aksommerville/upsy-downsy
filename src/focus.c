@@ -21,6 +21,18 @@ void focus_shift(int d) {
         return;
       }
     }
+    // If there's a platform here, we can't grow beyond it.
+    const struct platform *platform=upsy.map.platformv;
+    int i=upsy.map.platformc;
+    for (;i-->0;platform++) {
+      if (platform->x>upsy.focus.x) continue;
+      if (platform->x+platform->w<=upsy.focus.x) continue;
+      int limit=ROWC-platform->y-1;
+      if (upsy.map.dirt[upsy.focus.x]>=limit) {
+        upsy_sfx_reject_grow();
+        return;
+      }
+    }
     upsy_sfx_grow();
     upsy.map.dirt[upsy.focus.x]++;
     

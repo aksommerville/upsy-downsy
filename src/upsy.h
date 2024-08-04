@@ -33,6 +33,7 @@
 #include "crocodile.h"
 #include "fireworks.h"
 #include "hawk.h"
+#include "flames.h"
 #include <stdint.h>
 
 extern struct upsy {
@@ -54,6 +55,7 @@ extern struct upsy {
   struct crocodile crocodile;
   struct fireworks fireworks;
   struct hawk hawk;
+  struct flames flames;
 } upsy;
 
 int prepare_scene(int sceneid);

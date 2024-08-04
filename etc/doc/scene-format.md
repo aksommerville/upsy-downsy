@@ -16,3 +16,5 @@ Line begins with a keyword, followed by arguments, which can only be decimal int
 | hammer      | `X W PERIOD PHASE` Times in ms. Min PERIOD 1000. |
 | crocodile   | `X Y` |
 | hawk        | (none) |
+| platform    | `X Y W` |
+| flame       | `X Y W` W signed |

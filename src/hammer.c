@@ -55,17 +55,23 @@ static void hammer_check_collisions() {
     hammer_stop();
     return;
   }
-  int maxextent=0;
-  int i=upsy.hammer.x+upsy.hammer.w;
-  while (i-->upsy.hammer.x) {
-    if (upsy.map.dirt[i]>maxextent) maxextent=upsy.map.dirt[i];
+  int top=ROWC;
+  int y=1; for (;y<ROWC;y++) {
+    int x=upsy.hammer.x+upsy.hammer.w;
+    int solid=0;
+    for (;x-->upsy.hammer.x;) {
+      if (cell_solid_below_topsoil(x,y)) {
+        solid=1;
+        top=y;
+        break;
+      }
+    }
+    if (top<ROWC) break;
   }
-  double hlimit=(ROWC-maxextent)+1.0;
-  if (upsy.hammer.h>=hlimit) {
+  if (upsy.hammer.h>=top) {
     hammer_stop();
     return;
   }
-  //TODO platforms. other solid things?
 }
 
 /* Update.

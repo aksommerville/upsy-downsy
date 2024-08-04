@@ -53,10 +53,10 @@ void pbl_client_update(double elapsed,int in1,int in2,int in3,int in4) {
   in1|=in2|in3|in4;
   if (in1!=upsy.pvinput) {
     if (upsy.sceneid) {
-      if ((in1&PBL_BTN_LEFT)&&!(upsy.pvinput&PBL_BTN_LEFT)) move_focus(-1);
-      if ((in1&PBL_BTN_RIGHT)&&!(upsy.pvinput&PBL_BTN_RIGHT)) move_focus(1);
-      if ((in1&PBL_BTN_UP)&&!(upsy.pvinput&PBL_BTN_UP)) change_world(-1);
-      if ((in1&PBL_BTN_DOWN)&&!(upsy.pvinput&PBL_BTN_DOWN)) change_world(1);
+      if ((in1&PBL_BTN_LEFT)&&!(upsy.pvinput&PBL_BTN_LEFT)) focus_move(-1);
+      if ((in1&PBL_BTN_RIGHT)&&!(upsy.pvinput&PBL_BTN_RIGHT)) focus_move(1);
+      if ((in1&PBL_BTN_UP)&&!(upsy.pvinput&PBL_BTN_UP)) focus_shift(-1);
+      if ((in1&PBL_BTN_DOWN)&&!(upsy.pvinput&PBL_BTN_DOWN)) focus_shift(1);
     } else {
       if ((in1&PBL_BTN_SOUTH)&&!(upsy.pvinput&PBL_BTN_SOUTH)) {
         if (prepare_scene(1)<0) {

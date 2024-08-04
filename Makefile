@@ -38,6 +38,7 @@ $(HTML):$(ROM);$(PRECMD) $(PBLTOOL) bundle -o$@ $(ROM)
 $(EXE_TRUE):$(ROM) $(LIB_NATIVE);$(PRECMD) $(PBLTOOL) bundle -o$@ $(ROM) $(LIB_NATIVE)
 $(EXE_FAKE):$(ROM);$(PRECMD) $(PBLTOOL) bundle -o$@ $(ROM)
 
-run:$(ROM);$(PEBBLE_SDK)/out/linux/pebble $(ROM)
+#run:$(ROM);$(PEBBLE_SDK)/out/linux/pebble $(ROM)
+run:$(EXE_TRUE);$(EXE_TRUE)
 serve:$(ROM);$(PBLTOOL) serve #TODO
 clean:;rm -r mid out

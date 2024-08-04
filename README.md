@@ -17,7 +17,7 @@ Try a 10x10 grid of 6x6-pixel tiles, leaves us 4 pixels for a status bar.
 - [ ] Platforms.
 - [x] Hammer.
 - [ ] Water.
-- [ ] Crocodile. Moves just like the rabbit, keep them apart.
+- [x] Crocodile. Moves just like the rabbit, keep them apart.
 - [ ] Hawk. Eats rabbit if he stands still.
 - [ ] Static horizontal flamethrower.
 - After game logic stable:

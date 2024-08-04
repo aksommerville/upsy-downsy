@@ -25,6 +25,7 @@ static void hammer_stop() {
   }
   if (changed) {
     rabbit_dirt_changed();
+    crocodile_dirt_changed();
     if (upsy.rabbit.state==RABBIT_STATE_DEAD) return;
   }
   
@@ -34,7 +35,13 @@ static void hammer_stop() {
     upsy.rabbit.y=upsy.hammer.h-0.5;
   }
   
-  //TODO kill non-rabbit things
+  // How about the crocodile? Kill that too.
+  if (upsy.crocodile.present&&(upsy.crocodile.y<upsy.hammer.h)&&(upsy.crocodile.x>=upsy.hammer.x)&&(upsy.crocodile.x<=upsy.hammer.x+upsy.hammer.w)) {
+    // Can't do a gore effect for the crocodile, since the user is free to move terrain around after.
+    upsy.crocodile.present=0;
+    upsy_sfx_squash_croc();
+    fireworks_start(upsy.crocodile.x,upsy.crocodile.y);
+  }
 
   upsy.hammer.dh=HAMMER_UP_SPEED;
 }

@@ -35,6 +35,7 @@ void focus_shift(int d) {
   // Dirt levels have changed.
   upsy.map.dirty=1;
   rabbit_dirt_changed();
+  crocodile_dirt_changed();
 }
 
 /* Move to another column.

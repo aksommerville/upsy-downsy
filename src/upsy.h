@@ -30,6 +30,8 @@
 #include "focus.h"
 #include "rabbit.h"
 #include "hammer.h"
+#include "crocodile.h"
+#include "fireworks.h"
 #include <stdint.h>
 
 extern struct upsy {
@@ -48,6 +50,8 @@ extern struct upsy {
   struct focus focus;
   struct rabbit rabbit;
   struct hammer hammer;
+  struct crocodile crocodile;
+  struct fireworks fireworks;
 } upsy;
 
 int prepare_scene(int sceneid);
@@ -65,5 +69,6 @@ static void upsy_sfx_shrink() {}
 static void upsy_sfx_squash() {}
 static void upsy_sfx_victory() {}
 static void upsy_sfx_hammer_smash() {}
+static void upsy_sfx_squash_croc() {}
 
 #endif

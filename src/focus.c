@@ -7,6 +7,7 @@ void focus_shift(int d) {
 
   // No rearranging the world after the rabbit is dead.
   if (upsy.rabbit.state==RABBIT_STATE_DEAD) return;
+  if (upsy.victoryclock>0.0) return;
 
   if (d<0) { // up (positive for dirt)
     if (upsy.map.dirt[upsy.focus.x]>=ROWC) {
@@ -52,6 +53,7 @@ void focus_update(double elapsed) {
  
 void focus_render() {
   if (upsy.rabbit.state==RABBIT_STATE_DEAD) return;
+  if (upsy.victoryclock>0.0) return;
   int dstx=SCENEX+upsy.focus.x*TILESIZE;
   int srcx=upsy.focus.frame*TILESIZE;
   int srcy=TILESIZE*4; // middle

@@ -4,6 +4,7 @@
 struct map {
   int dirty;
   uint8_t dirt[COLC]; // Elevation from bottom.
+  int carrotx,carroty;
 };
 
 int tile_is_dirt(uint8_t tileid);

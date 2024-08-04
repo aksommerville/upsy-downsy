@@ -87,4 +87,10 @@ void map_render() {
     }
   }
   gfx_blit(0,upsy.texid_bgbits,SCENEX,SCENEY,0,0,-1,-1,0);
+  
+  gfx_blit(
+    0,upsy.texid_tiles,
+    SCENEX+upsy.map.carrotx*TILESIZE,SCENEY+upsy.map.carroty*TILESIZE,
+    7*TILESIZE,2*TILESIZE,TILESIZE,TILESIZE,0
+  );
 }

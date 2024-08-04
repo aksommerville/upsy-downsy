@@ -44,7 +44,6 @@ int pbl_client_init(int fbw,int fbh,int rate,int chanc) {
   
   upsy.sceneid=0;
   upsy_play_song(4);
-  //if (prepare_scene(1)<0) return -1;
   
   return 0;
 }
@@ -59,7 +58,7 @@ void pbl_client_update(double elapsed,int in1,int in2,int in3,int in4) {
       if ((in1&PBL_BTN_DOWN)&&!(upsy.pvinput&PBL_BTN_DOWN)) focus_shift(1);
     } else {
       if ((in1&PBL_BTN_SOUTH)&&!(upsy.pvinput&PBL_BTN_SOUTH)) {
-        if (prepare_scene(1)<0) {
+        if (prepare_scene(upsy.sceneid?upsy.sceneid:1)<0) {
           pbl_log("Failed to load scene 1. Aborting.");
           pbl_terminate(1);
           return;
@@ -69,7 +68,15 @@ void pbl_client_update(double elapsed,int in1,int in2,int in3,int in4) {
     upsy.pvinput=in1;
   }
   if (upsy.sceneid) {
-    update_scene(elapsed);
+    if (upsy.victoryclock>0.0) {
+      if ((upsy.victoryclock-=elapsed)<=0.0) {
+        if (prepare_scene(upsy.sceneid+1)<0) {
+          pbl_terminate(1);
+        }
+      }
+    } else {
+      update_scene(elapsed);
+    }
   }
 }
 

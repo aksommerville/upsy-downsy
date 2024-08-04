@@ -15,6 +15,11 @@
 #define SCENEX 2
 #define SCENEY 4
 
+#define UPSY_VICTORY_TIME 3.0
+
+// We can have pbltool generate a header with macros for the custom types and resource names, but meh.
+#define PBL_TID_scene 16
+
 #include "pebble/pebble.h"
 #include "image/image.h"
 #include "gfx/gfx.h"
@@ -37,6 +42,7 @@ extern struct upsy {
   int16_t audio[1024];
   int songid;
   
+  double victoryclock;
   struct map map;
   struct focus focus;
   struct rabbit rabbit;
@@ -55,5 +61,6 @@ static void upsy_sfx_reject_shrink() {}
 static void upsy_sfx_grow() {}
 static void upsy_sfx_shrink() {}
 static void upsy_sfx_squash() {}
+static void upsy_sfx_victory() {}
 
 #endif

@@ -195,6 +195,15 @@ void rabbit_update(double elapsed) {
         }
       } break;
   }
+  if (upsy.rabbit.state!=RABBIT_STATE_DEAD) {
+    int cx=(int)(upsy.rabbit.x);
+    int cy=(int)(upsy.rabbit.y);
+    if ((cx==upsy.map.carrotx)&&(cy==upsy.map.carroty)) {
+      upsy.victoryclock=UPSY_VICTORY_TIME;
+      upsy_sfx_victory();
+      upsy.rabbit.frame=0;
+    }
+  }
 }
   
 /* Render.

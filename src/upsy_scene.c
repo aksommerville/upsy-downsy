@@ -141,11 +141,24 @@ static int decode_and_apply_scene(const char *src,int srcc) {
  
 int prepare_scene(int sceneid) {
 
+  if (!upsy.sceneid) { // Clear session stats.
+    upsy.mortc_total=0;
+    upsy.score=0;
+    upsy.totaltime=0.0;
+  }
+
   const char *src=0;
   int srcc=rom_get(&src,PBL_TID_scene,sceneid);
   if (srcc<1) {
     upsy.sceneid=0;
     upsy_play_song(4);
+    if (upsy.score>upsy.hiscore) {
+      upsy.hiscore=upsy.score;
+      upsy_save_hiscore();
+    }
+    upsy.mortc=0;
+    upsy.stagetime=0.0;
+    upsy.victoryclock=0.0;
     return 0;
   }
   upsy.sceneid=sceneid;
@@ -175,6 +188,10 @@ int prepare_scene(int sceneid) {
  */
 
 void update_scene(double elapsed) {
+  if (upsy.rabbit.state!=RABBIT_STATE_DEAD) {
+    upsy.stagetime+=elapsed;
+    upsy.totaltime+=elapsed;
+  }
   focus_update(elapsed);
   rabbit_update(elapsed);
   hammer_update(elapsed);
@@ -205,6 +222,69 @@ void render_scene() {
   gfx_fill_rect(0,SCREENW-SCENEX,0,SCENEY,SCREENH,0);
   
   { // Status row.
-    //TODO status
+    char msg[16]=" ##/##     #### ";
+    msg[1]='0'+upsy.sceneid/10;
+    msg[2]='0'+upsy.sceneid%10;
+    msg[4]='0'+upsy.scenec/10;
+    msg[5]='0'+upsy.scenec%10;
+    msg[11]='0'+upsy.score/1000;
+    msg[12]='0'+(upsy.score/100)%10;
+    msg[13]='0'+(upsy.score/10)%10;
+    msg[14]='0'+upsy.score%10;
+    upsy_render_text(0,0,msg,sizeof(msg));
+  }
+  
+  if (upsy.victoryclock>0.0) { // Victory stats, if play is complete.
+    gfx_darken(0);
+    upsy_render_text(10,10,"LEVEL CLEAR",11);
+    { char msg[16]="     CLEAR t### ";
+      msg[12]='0'+upsy.clear_bonus/100;
+      msg[13]='0'+(upsy.clear_bonus/10)%10;
+      msg[14]='0'+upsy.clear_bonus%10;
+      upsy_render_text(0,18,msg,16);
+    }
+    { char msg[16]=" TIME #:## t### ";
+      int sec=(int)upsy.stagetime;
+      int min=sec/60;
+      if (min>9) { min=9; sec=99; }
+      else sec%=60;
+      msg[6]='0'+min;
+      msg[8]='0'+sec/10;
+      msg[9]='0'+sec%10;
+      msg[12]='0'+upsy.time_bonus/100;
+      msg[13]='0'+(upsy.time_bonus/10)%10;
+      msg[14]='0'+upsy.time_bonus%10;
+      upsy_render_text(0,22,msg,16);
+    }
+    { char msg[16]="  DEATH ## t### ";
+      if (upsy.mortc>99) msg[8]=msg[9]='9';
+      else {
+        msg[8]='0'+upsy.mortc/10;
+        msg[9]='0'+upsy.mortc%10;
+      }
+      msg[12]='0'+upsy.death_bonus/100;
+      msg[13]='0'+(upsy.death_bonus/10)%10;
+      msg[14]='0'+upsy.death_bonus%10;
+      upsy_render_text(0,26,msg,16);
+    }
+  }
+}
+
+/* Render text.
+ */
+ 
+void upsy_render_text(int dstx,int dsty,const char *src,int srcc) {
+  for (;srcc-->0;src++,dstx+=4) {
+    int srcx,srcy;
+         if ((*src>='a')&&(*src<='m')) { srcx=((*src)-'a')*3; srcy=6; }
+    else if ((*src>='A')&&(*src<='M')) { srcx=((*src)-'A')*3; srcy=6; }
+    else if ((*src>='n')&&(*src<='z')) { srcx=((*src)-'n')*3; srcy=9; }
+    else if ((*src>='N')&&(*src<='Z')) { srcx=((*src)-'N')*3; srcy=9; }
+    else if ((*src>='0')&&(*src<='9')) { srcx=((*src)-'0')*3; srcy=12; }
+    else if (*src==':') { srcx=30; srcy=12; }
+    else if (*src=='.') { srcx=33; srcy=12; }
+    else if (*src=='/') { srcx=36; srcy=12; }
+    else continue;
+    gfx_blit(0,upsy.texid_tiles,dstx,dsty,srcx,srcy,3,3,0);
   }
 }

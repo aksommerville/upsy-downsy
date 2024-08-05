@@ -15,8 +15,6 @@
 #define SCENEX 2
 #define SCENEY 4
 
-#define UPSY_VICTORY_TIME 2.0
-
 // We can have pbltool generate a header with macros for the custom types and resource names, but meh.
 #define PBL_TID_scene 16
 
@@ -47,6 +45,21 @@ extern struct upsy {
   int16_t audio[1024];
   int songid;
   
+  // Stage stats.
+  int mortc;
+  double stagetime;
+  int clear_bonus;
+  int death_bonus;
+  int time_bonus;
+  
+  // Session stats.
+  int mortc_total;
+  int score;
+  double totaltime;
+  
+  int hiscore;
+  int scenec;
+  
   double victoryclock;
   struct map map;
   struct focus focus;
@@ -64,6 +77,10 @@ void update_scene(double elapsed);
 void render_scene();
 
 void upsy_play_song(int songid);
+void upsy_render_text(int dstx,int dsty,const char *src,int srcc);
+
+void upsy_save_hiscore();
+void upsy_load_hiscore();
 
 //TODO Sound effects.
 static void upsy_sfx_reject_grow() {}

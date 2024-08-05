@@ -97,4 +97,7 @@ void gfx_blit_onebit(
   int xbgr
 );
 
+//XXX added for upsy-downsy
+void gfx_darken(int texid);
+
 #endif

@@ -44,14 +44,61 @@ int pbl_client_init(int fbw,int fbh,int rate,int chanc) {
   
   upsy.sceneid=0;
   upsy_play_song(4);
+  upsy_load_hiscore();
+  
+  // Count the scenes. They must be id'd contiguously from 1.
+  const void *dummy;
+  while (rom_get(&dummy,PBL_TID_scene,upsy.scenec+1)>0) upsy.scenec++;
   
   return 0;
+}
+
+static void upsy_apply_scores(double elapsed) {
+  int xferc=(int)(elapsed*100.0);
+  if (xferc<1) xferc=1;
+  if (upsy.clear_bonus>=xferc) {
+    upsy.clear_bonus-=xferc;
+    upsy.score+=xferc;
+    return;
+  } else if (upsy.clear_bonus>0) {
+    upsy.score+=upsy.clear_bonus;
+    xferc-=upsy.clear_bonus;
+    upsy.clear_bonus=0;
+  }
+  if (upsy.time_bonus>=xferc) {
+    upsy.time_bonus-=xferc;
+    upsy.score+=xferc;
+    return;
+  } else if (upsy.time_bonus>0) {
+    upsy.score+=upsy.time_bonus;
+    xferc-=upsy.time_bonus;
+    upsy.time_bonus=0;
+  }
+  if (upsy.death_bonus>=xferc) {
+    upsy.death_bonus-=xferc;
+    upsy.score+=xferc;
+    return;
+  } else if (upsy.death_bonus>0) {
+    upsy.score+=upsy.death_bonus;
+    xferc-=upsy.death_bonus;
+    upsy.death_bonus=0;
+  }
 }
 
 void pbl_client_update(double elapsed,int in1,int in2,int in3,int in4) {
   in1|=in2|in3|in4;
   if (in1!=upsy.pvinput) {
-    if (upsy.sceneid&&(upsy.rabbit.state!=RABBIT_STATE_DEAD)) {
+    if (upsy.sceneid&&(upsy.victoryclock>0.0)) {
+      if ((in1&PBL_BTN_SOUTH)&&!(upsy.pvinput&PBL_BTN_SOUTH)) {
+        upsy_apply_scores(999.0);
+        upsy.mortc=0;
+        upsy.stagetime=0.0;
+        upsy.victoryclock=0.0;
+        if (prepare_scene(upsy.sceneid+1)<0) {
+          pbl_terminate(1);
+        }
+      }
+    } else if (upsy.sceneid&&(upsy.rabbit.state!=RABBIT_STATE_DEAD)) {
       if ((in1&PBL_BTN_LEFT)&&!(upsy.pvinput&PBL_BTN_LEFT)) focus_move(-1);
       if ((in1&PBL_BTN_RIGHT)&&!(upsy.pvinput&PBL_BTN_RIGHT)) focus_move(1);
       if ((in1&PBL_BTN_UP)&&!(upsy.pvinput&PBL_BTN_UP)) focus_shift(-1);
@@ -69,10 +116,9 @@ void pbl_client_update(double elapsed,int in1,int in2,int in3,int in4) {
   }
   if (upsy.sceneid) {
     if (upsy.victoryclock>0.0) {
-      if ((upsy.victoryclock-=elapsed)<=0.0) {
-        if (prepare_scene(upsy.sceneid+1)<0) {
-          pbl_terminate(1);
-        }
+      upsy.victoryclock+=elapsed;
+      if (upsy.victoryclock>1.0) {
+        upsy_apply_scores(elapsed);
       }
     } else {
       update_scene(elapsed);
@@ -90,6 +136,18 @@ void *pbl_client_render() {
     render_scene();
   } else {
     gfx_blit(0,upsy.texid_title,0,0,0,0,64,64,0);
+    char msg[10]="LAST: 0000";
+    msg[6]='0'+upsy.score/1000;
+    msg[7]='0'+(upsy.score/100)%10;
+    msg[8]='0'+(upsy.score/10)%10;
+    msg[9]='0'+upsy.score%10;
+    upsy_render_text(13,45,msg,10);
+    memcpy(msg,"BEST",4);
+    msg[6]='0'+upsy.hiscore/1000;
+    msg[7]='0'+(upsy.hiscore/100)%10;
+    msg[8]='0'+(upsy.hiscore/10)%10;
+    msg[9]='0'+upsy.hiscore%10;
+    upsy_render_text(13,49,msg,10);
   }
   return gfx_finish();
 }
@@ -100,4 +158,12 @@ void upsy_play_song(int songid) {
   int serialc=rom_get(&serial,PBL_TID_song,songid);
   lofi_play_song(serial,serialc);
   upsy.songid=songid;
+}
+
+void upsy_save_hiscore() {
+  pbl_log("TODO %s %d",__func__,upsy.hiscore);
+}
+
+void upsy_load_hiscore() {
+  pbl_log("TODO %s",__func__);
 }

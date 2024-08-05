@@ -158,6 +158,8 @@ void rabbit_squash() {
   upsy.rabbit.state=RABBIT_STATE_DEAD;
   upsy.rabbit.frame=0;
   upsy.rabbit.animclock=0.200;
+  upsy.mortc++;
+  upsy.mortc_total++;
 }
 
 /* Dirt changed.
@@ -254,9 +256,14 @@ void rabbit_update(double elapsed) {
     int cx=(int)(upsy.rabbit.x);
     int cy=(int)(upsy.rabbit.y);
     if ((cx==upsy.map.carrotx)&&(cy==upsy.map.carroty)) {
-      upsy.victoryclock=UPSY_VICTORY_TIME;
+      upsy.victoryclock=0.001;
       upsy_sfx_victory();
       upsy.rabbit.frame=0;
+      upsy.clear_bonus=50;
+      if (upsy.stagetime<10.0) upsy.time_bonus=100;
+      else upsy.time_bonus=0;
+      if (upsy.mortc) upsy.death_bonus=0;
+      else upsy.death_bonus=100;
     }
   }
 }

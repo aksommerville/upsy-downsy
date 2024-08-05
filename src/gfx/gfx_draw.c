@@ -489,3 +489,18 @@ void gfx_blit_onebit(
     }
   }
 }
+
+/* Darken texture.
+ */
+ 
+void gfx_darken(int texid) {
+  if ((texid<0)||(texid>=gfx.texturec)) return;
+  struct gfx_texture *tex=gfx.texturev+texid;
+  int pxc=tex->w*tex->h;
+  uint8_t *v=(uint8_t*)tex->v;
+  for (;pxc-->0;v+=4) {
+    v[0]>>=1;
+    v[1]>>=1;
+    v[2]>>=1;
+  }
+}

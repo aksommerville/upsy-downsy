@@ -15,4 +15,5 @@ Try a 10x10 grid of 6x6-pixel tiles, leaves us 4 pixels for a status bar.
 
 - [ ] Final scenes.
 - [ ] Decoration and verbiage for Itch page.
-- [ ] Persistence isn't working on itch. Arrange a local server and test.
+- [x] Persistence isn't working on itch. Arrange a local server and test.
+- - Forgot, you need "version" or "persistKey" to make that work in web.

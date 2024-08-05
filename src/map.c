@@ -123,7 +123,7 @@ static void map_render_dirt_cell(
 void map_render() {
   if (upsy.map.dirty) {
     upsy.map.dirty=0;
-    gfx_clear(upsy.texid_bgbits,0xff954f3c);
+    gfx_clear(upsy.texid_bgbits,0xff876145);
     const struct platform *platform=upsy.map.platformv;
     int i=upsy.map.platformc;
     for (;i-->0;platform++) {

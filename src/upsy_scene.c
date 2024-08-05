@@ -214,9 +214,9 @@ void render_scene() {
   focus_render();
 
   // Blot margins. Important to do this after drawing the proper scene, so sprites can't touch the margins.
+  gfx_fill_rect(0,0,SCENEY,SCENEX,SCREENH,0xff876145);
+  gfx_fill_rect(0,SCREENW-SCENEX,SCENEY,SCENEX,SCREENH,0xff876145);
   gfx_fill_rect(0,0,0,SCREENW,SCENEY,0);
-  gfx_fill_rect(0,0,SCENEY,SCENEX,SCREENH,0);
-  gfx_fill_rect(0,SCREENW-SCENEX,0,SCENEY,SCREENH,0);
   
   { // Status row.
     char msg[16]=" ##/##     #### ";
@@ -233,6 +233,8 @@ void render_scene() {
   
   if (upsy.victoryclock>0.0) { // Victory stats, if play is complete.
     gfx_darken(0);
+    gfx_fill_rect(0,0,SCENEY,SCENEX,SCREENH,0xff876145);
+    gfx_fill_rect(0,SCREENW-SCENEX,SCENEY,SCENEX,SCREENH,0xff876145);
     upsy_render_text(10,10,"LEVEL CLEAR",11);
     { char msg[16]="     CLEAR t### ";
       msg[12]='0'+upsy.clear_bonus/100;

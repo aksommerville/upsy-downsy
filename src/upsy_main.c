@@ -43,7 +43,7 @@ int pbl_client_init(int fbw,int fbh,int rate,int chanc) {
   { uint8_t coefv[]={0xff,0xc0,0x80,0x40,0x20,0x10}; lofi_wave_init_harmonics(7,coefv,sizeof(coefv)); }
   
   upsy.sceneid=0;
-  upsy_play_song(1);
+  upsy_play_song(4);
   upsy_load_hiscore();
   
   // Count the scenes. They must be id'd contiguously from 1.

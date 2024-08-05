@@ -13,7 +13,6 @@ Try a 10x10 grid of 6x6-pixel tiles, leaves us 4 pixels for a status bar.
 
 ## TODO
 
-- [x] Sound effects.
-- [x] Refine background music. Currently all one wave, and probly we should fine-tune the Off times.
 - [ ] Final scenes.
 - [ ] Decoration and verbiage for Itch page.
+- [ ] Persistence isn't working on itch. Arrange a local server and test.

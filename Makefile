@@ -41,5 +41,5 @@ $(EXE_FAKE):$(ROM);$(PRECMD) $(PBLTOOL) bundle -o$@ $(ROM)
 
 #run:$(ROM);$(PEBBLE_SDK)/out/linux/pebble $(ROM)
 run:$(EXE_TRUE);$(EXE_TRUE)
-serve:$(ROM);$(PBLTOOL) serve #TODO
+edit:;node src/editor/main.js
 clean:;rm -r mid out

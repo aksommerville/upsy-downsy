@@ -16,6 +16,7 @@ Try a 10x10 grid of 6x6-pixel tiles, leaves us 4 pixels for a status bar.
 - [ ] Sound effects.
 - [ ] Refine background music. Currently all one wave, and probly we should fine-tune the Off times.
 - [ ] Final scenes.
+- - [x] Go big, make a visual editor.
 - [ ] Proper content for status bar.
 - [ ] Scorekeeping.
 - [ ] Decoration and verbiage for Itch page.

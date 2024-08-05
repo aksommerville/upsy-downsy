@@ -54,9 +54,10 @@ int pbl_client_init(int fbw,int fbh,int rate,int chanc) {
 }
 
 static void upsy_apply_scores(double elapsed) {
+  if (!upsy.clear_bonus&&!upsy.time_bonus&&!upsy.death_bonus) return;
   int xferc=(int)(elapsed*100.0);
   if (xferc<1) xferc=1;
-  if (upsy.clear_bonus>=xferc) {
+  if (upsy.clear_bonus>xferc) {
     upsy.clear_bonus-=xferc;
     upsy.score+=xferc;
     return;
@@ -65,7 +66,7 @@ static void upsy_apply_scores(double elapsed) {
     xferc-=upsy.clear_bonus;
     upsy.clear_bonus=0;
   }
-  if (upsy.time_bonus>=xferc) {
+  if (upsy.time_bonus>xferc) {
     upsy.time_bonus-=xferc;
     upsy.score+=xferc;
     return;
@@ -74,7 +75,7 @@ static void upsy_apply_scores(double elapsed) {
     xferc-=upsy.time_bonus;
     upsy.time_bonus=0;
   }
-  if (upsy.death_bonus>=xferc) {
+  if (upsy.death_bonus>xferc) {
     upsy.death_bonus-=xferc;
     upsy.score+=xferc;
     return;
@@ -82,6 +83,9 @@ static void upsy_apply_scores(double elapsed) {
     upsy.score+=upsy.death_bonus;
     xferc-=upsy.death_bonus;
     upsy.death_bonus=0;
+  }
+  if (!upsy.clear_bonus&&!upsy.time_bonus&&!upsy.death_bonus) {
+    upsy_save_hiscore_if();
   }
 }
 
@@ -161,9 +165,36 @@ void upsy_play_song(int songid) {
 }
 
 void upsy_save_hiscore() {
-  pbl_log("TODO %s %d",__func__,upsy.hiscore);
+  char tmp[4]={
+    '0'+(upsy.hiscore/1000)%10,
+    '0'+(upsy.hiscore/100)%10,
+    '0'+(upsy.hiscore/10)%10,
+    '0'+upsy.hiscore%10,
+  };
+  pbl_store_set("hiscore",7,tmp,4);
 }
 
 void upsy_load_hiscore() {
-  pbl_log("TODO %s",__func__);
+  upsy.hiscore=0;
+  char src[16];
+  int srcc=pbl_store_get(src,sizeof(src),"hiscore",7);
+  if ((srcc<1)||(srcc>sizeof(src))) return;
+  int i=0; for (;i<srcc;i++) {
+    if ((src[i]<'0')||(src[i]>'9')) { upsy.hiscore=0; return; }
+    if (upsy.hiscore>INT_MAX/10) { upsy.hiscore=0; return; }
+    upsy.hiscore*=10;
+    int digit=src[i]-'0';
+    if (upsy.hiscore>INT_MAX-digit) { upsy.hiscore=0; return; }
+    upsy.hiscore+=digit;
+  }
+  if (upsy.hiscore>9999) {
+    pbl_log("Hi score %d exceeds the limit of 9999 that i carefully arranged. Are you cheating?",upsy.hiscore);
+    upsy.hiscore=9999;
+  }
+}
+
+void upsy_save_hiscore_if() {
+  if (upsy.score<=upsy.hiscore) return;
+  upsy.hiscore=upsy.score;
+  upsy_save_hiscore();
 }

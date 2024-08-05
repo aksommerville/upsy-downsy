@@ -81,6 +81,7 @@ void upsy_render_text(int dstx,int dsty,const char *src,int srcc);
 
 void upsy_save_hiscore();
 void upsy_load_hiscore();
+void upsy_save_hiscore_if();
 
 //TODO Sound effects.
 static void upsy_sfx_reject_grow() {}

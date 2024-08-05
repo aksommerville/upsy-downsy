@@ -152,10 +152,7 @@ int prepare_scene(int sceneid) {
   if (srcc<1) {
     upsy.sceneid=0;
     upsy_play_song(4);
-    if (upsy.score>upsy.hiscore) {
-      upsy.hiscore=upsy.score;
-      upsy_save_hiscore();
-    }
+    upsy_save_hiscore_if();
     upsy.mortc=0;
     upsy.stagetime=0.0;
     upsy.victoryclock=0.0;

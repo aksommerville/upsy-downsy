@@ -57,6 +57,7 @@ void focus_move(int d) {
   upsy.focus.x+=d;
   if (upsy.focus.x<0) upsy.focus.x=COLC-1;
   else if (upsy.focus.x>=COLC) upsy.focus.x=0;
+  upsy_sfx_move_focus();
 }
 
 /* Update.

@@ -60,6 +60,7 @@ static void upsy_apply_scores(double elapsed) {
   if (upsy.clear_bonus>xferc) {
     upsy.clear_bonus-=xferc;
     upsy.score+=xferc;
+    upsy_sfx_score_tick();
     return;
   } else if (upsy.clear_bonus>0) {
     upsy.score+=upsy.clear_bonus;
@@ -69,6 +70,7 @@ static void upsy_apply_scores(double elapsed) {
   if (upsy.time_bonus>xferc) {
     upsy.time_bonus-=xferc;
     upsy.score+=xferc;
+    upsy_sfx_score_tick();
     return;
   } else if (upsy.time_bonus>0) {
     upsy.score+=upsy.time_bonus;
@@ -78,18 +80,21 @@ static void upsy_apply_scores(double elapsed) {
   if (upsy.death_bonus>xferc) {
     upsy.death_bonus-=xferc;
     upsy.score+=xferc;
+    upsy_sfx_score_tick();
     return;
   } else if (upsy.death_bonus>0) {
     upsy.score+=upsy.death_bonus;
     xferc-=upsy.death_bonus;
     upsy.death_bonus=0;
   }
+  upsy_sfx_score_tick();
   if (!upsy.clear_bonus&&!upsy.time_bonus&&!upsy.death_bonus) {
     upsy_save_hiscore_if();
   }
 }
 
 void pbl_client_update(double elapsed,int in1,int in2,int in3,int in4) {
+  upsy.totalclock+=elapsed;
   in1|=in2|in3|in4;
   if (in1!=upsy.pvinput) {
     if (upsy.sceneid&&(upsy.victoryclock>0.0)) {

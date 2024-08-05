@@ -37,6 +37,7 @@
 extern struct upsy {
   int pvinput;
   int sceneid;
+  double totalclock;
   
   int texid_tiles;
   int texid_bgbits;
@@ -83,14 +84,15 @@ void upsy_save_hiscore();
 void upsy_load_hiscore();
 void upsy_save_hiscore_if();
 
-//TODO Sound effects.
-static void upsy_sfx_reject_grow() {}
-static void upsy_sfx_reject_shrink() {}
-static void upsy_sfx_grow() {}
-static void upsy_sfx_shrink() {}
-static void upsy_sfx_squash() {}
-static void upsy_sfx_victory() {}
-static void upsy_sfx_hammer_smash() {}
-static void upsy_sfx_squash_croc() {}
+void upsy_sfx_reject_grow();
+void upsy_sfx_reject_shrink();
+void upsy_sfx_grow();
+void upsy_sfx_shrink();
+void upsy_sfx_move_focus();
+void upsy_sfx_squash();
+void upsy_sfx_victory();
+void upsy_sfx_hammer_smash();
+void upsy_sfx_squash_croc();
+void upsy_sfx_score_tick();
 
 #endif

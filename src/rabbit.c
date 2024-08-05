@@ -99,14 +99,18 @@ static double rabbit_measure_freedom(int dx,int dy) {
 static double rabbit_measure_road(int dx) {
   int row=(int)upsy.rabbit.y+1;
   double road;
-  if (dx<0) {
-    int solcol=(int)(upsy.rabbit.x-0.45);
-    while ((solcol>=0)&&cell_solid(solcol,row)) solcol--;
-    road=upsy.rabbit.x-0.45-(solcol+1.0);
+  if (row>=ROWC) {
+    road=COLC;
   } else {
-    int solcol=(int)(upsy.rabbit.x+0.45);
-    while ((solcol<COLC)&&cell_solid(solcol,row)) solcol++;
-    road=(double)solcol-upsy.rabbit.x-0.45;
+    if (dx<0) {
+      int solcol=(int)(upsy.rabbit.x-0.45);
+      while ((solcol>=0)&&cell_solid(solcol,row)) solcol--;
+      road=upsy.rabbit.x-0.45-(solcol+1.0);
+    } else {
+      int solcol=(int)(upsy.rabbit.x+0.45);
+      while ((solcol<COLC)&&cell_solid(solcol,row)) solcol++;
+      road=(double)solcol-upsy.rabbit.x-0.45;
+    }
   }
   double free=rabbit_measure_freedom(dx,0);
   if (free<road) return free;

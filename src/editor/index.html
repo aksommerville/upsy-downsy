@@ -30,6 +30,9 @@ body {
   cursor: pointer;
   user-select: none;
 }
+.RootUi > .sidebar li.highlight {
+  background-color: #432;
+}
 .RootUi > .workspace {
   flex: 1;
 }
@@ -37,9 +40,19 @@ body {
   width: 100%;
   height: 100%;
 }
-.Editor canvas {
-  width: 100%;
-  height: 100%;
+.Editor {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.Editor > .raw {
+  width: 400px;
+  height: 400px;
+}
+.SceneVisual {
+  width: 400px;
+  height: 400px;
 }
 </style>
 <script type="module" src="./bootstrap.js"></script>

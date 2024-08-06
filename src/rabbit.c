@@ -22,18 +22,20 @@ static double rabbit_measure_freedom(int dx,int dy) {
   
   /* Consider solid bodies other than dirt. Surely there will be platforms and such. TODO
    */
-  if (dy<0) {
-    if ((upsy.rabbit.x>=upsy.hammer.x)&&(upsy.rabbit.x<=upsy.hammer.x+upsy.hammer.w)) {
-      double distance=upsy.rabbit.y-upsy.hammer.h;
-      if (distance<freedom) freedom=distance;
-    }
-  } else if (upsy.hammer.h>upsy.rabbit.y) {
-    if (dx<0) {
-      double distance=upsy.rabbit.x-0.45-(double)(upsy.hammer.x+upsy.hammer.w);
-      if ((distance>-1.0)&&(distance<freedom)) freedom=distance;
-    } else if (dx>0) {
-      double distance=(double)upsy.hammer.x-upsy.rabbit.x-0.45;
-      if ((distance>-1.0)&&(distance<freedom)) freedom=distance;
+  if (upsy.hammer.w) {
+    if (dy<0) {
+      if ((upsy.rabbit.x>=upsy.hammer.x)&&(upsy.rabbit.x<=upsy.hammer.x+upsy.hammer.w)) {
+        double distance=upsy.rabbit.y-upsy.hammer.h;
+        if (distance<freedom) freedom=distance;
+      }
+    } else if (upsy.hammer.h>upsy.rabbit.y) {
+      if (dx<0) {
+        double distance=upsy.rabbit.x-0.45-(double)(upsy.hammer.x+upsy.hammer.w);
+        if ((distance>-1.0)&&(distance<freedom)) freedom=distance;
+      } else if (dx>0) {
+        double distance=(double)upsy.hammer.x-upsy.rabbit.x-0.45;
+        if ((distance>-1.0)&&(distance<freedom)) freedom=distance;
+      }
     }
   }
    

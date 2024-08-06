@@ -13,7 +13,13 @@ Try a 10x10 grid of 6x6-pixel tiles, leaves us 4 pixels for a status bar.
 
 ## TODO
 
+- [x] Editor is kind of painful.
+- - [x] Universal fallback: Show full text at all times.
+- - [x] Ensure we're able to grab floor when it's at zero.
+- - [x] Widen things up to the edges.
 - [ ] Final scenes.
+- [ ] Revisit margins, I've only made them worse.
+- [ ] Try a cheerier color scheme.
 - [ ] Decoration and verbiage for Itch page.
 - [x] Persistence isn't working on itch. Arrange a local server and test.
 - - Forgot, you need "version" or "persistKey" to make that work in web.

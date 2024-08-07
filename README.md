@@ -10,11 +10,4 @@ Help the rabbit reach his carrot by raising or lowering columns of earth.
 
 ## TODO
 
-- [x] Final scenes. Finish by 9 August.
-- - [x] 1: Make a bunch, like at least 30. ...30 is a lot. Got 16 so far. ...stopping at 19, 19's a good number.
-- - [x] 2: Sort by difficulty.
-- - [x] 3: Eliminate ones too similar to others, or that I don't like after playing.
-- - [x] 4: Repack IDs.
 - [ ] Decoration and verbiage for Itch page.
-- [x] Possible to die and win at the same time, by the bird at least
-

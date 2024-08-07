@@ -68,7 +68,7 @@ export class RootUi {
     }).then(() => {
       const sidebar = this.element.querySelector(".sidebar");
       this.dom.spawn(sidebar, "LI", { "data-scene": name, "on-click": () => this.navigateToScene(name) }, name);
-      return this.loadScene(name);
+      return this.navigateToScene(name);
     }).catch(e => {
       this.window.console.error(e);
     });

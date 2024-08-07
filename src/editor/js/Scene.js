@@ -8,7 +8,7 @@ export class Scene {
     this.hawk = false;
     this.song = 1;
     this.hammer = null; // [x,w,period,phase] or null
-    this.flames = []; // [x,y,w]
+    this.flames = []; // [x,y,w,h,period,phase]
     this.platforms = []; // [x,y,w]
     this.invalid = []; // strings, full lines from serial that we couldn't process
     

@@ -14,17 +14,44 @@ void flames_clear() {
 /* Add.
  */
  
-int flames_add(int x,int y,int w) {
+int flames_add(int x,int y,int w,int h,int period,int phase) {
   if (upsy.flames.c>=FLAMES_LIMIT) return -1;
-  if ((x<0)||(x>=COLC)||(y<0)||(y>=COLC)||!w||(w<-10)||(w>10)) return -1;
   struct flame *flame=upsy.flames.v+upsy.flames.c++;
   flame->x=x;
   flame->y=y;
   flame->w=w;
-  flame->state=0;
-  flame->clock=WAIT_TIME;
-  //TODO Configurable period and phase?
+  flame->h=h;
+  if (period>0) {
+    flame->period=period/1000.0+WAIT_TIME;
+    flame->clock=phase/1000.0+WAIT_TIME;
+    flame->offtime=WAIT_TIME;
+  } else {
+    flame->period=1.0;
+    flame->clock=0.0;
+    flame->offtime=0.0;
+  }
   return 0;
+}
+
+/* Killbox.
+ */
+ 
+static void flames_calculate_killbox(double *x,double *y,double *w,double *h,const struct flame *flame) {
+  *x=flame->x;
+  *y=flame->y;
+  *w=*h=1.0;
+  if (flame->w<0) { (*x)+=flame->w; (*w)-=flame->w-1.0; }
+  else if (flame->w>0) (*w)+=flame->w-1.0;
+  if (flame->h<0) { (*y)+=flame->h; (*h)-=flame->h-1.0; }
+  else if (flame->h>0) (*h)+=flame->h-1.0;
+}
+
+static inline int point_in_killbox(double x,double y,double w,double h,double qx,double qy) {
+  if (qx<x) return 0;
+  if (qy<y) return 0;
+  if (qx>=x+w) return 0;
+  if (qy>=y+h) return 0;
+  return 1;
 }
 
 /* Update.
@@ -36,41 +63,21 @@ void flames_update(double elapsed) {
   int i=upsy.flames.c;
   for (;i-->0;flame++) {
     if ((flame->clock-=elapsed)<=0.0) {
-      if (++(flame->state)>=STATE_COUNT) flame->state=0;
-      if (flame->state) flame->clock+=FRAME_TIME;
-      else flame->clock+=WAIT_TIME;
+      flame->clock+=flame->period;
     }
-    if (flame->state) {
+    if (flame->clock>=flame->offtime) {
+      double x,y,w,h;
+      flames_calculate_killbox(&x,&y,&w,&h,flame);
       if (upsy.rabbit.state!=RABBIT_STATE_DEAD) {
-        if ((upsy.rabbit.y>=flame->y)&&(upsy.rabbit.y<flame->y+1)) {
-          int dx=(int)upsy.rabbit.x-flame->x;
-          if (flame->w<0) {
-            if ((dx>=flame->w)&&(dx<0)) {
-              rabbit_squash();
-            }
-          } else {
-            if ((dx<=flame->w)&&(dx>0)) {
-              rabbit_squash();
-            }
-          }
+        if (point_in_killbox(x,y,w,h,upsy.rabbit.x,upsy.rabbit.y)) {
+          rabbit_squash();
         }
       }
       if (upsy.crocodile.present) {
-        if ((upsy.crocodile.y>=flame->y)&&(upsy.crocodile.y<=flame->y+1)) {
-          int dx=(int)upsy.crocodile.x-flame->x;
-          if (flame->w<0) {
-            if ((dx>=flame->w)&&(dx<0)) {
-              upsy.crocodile.present=0;
-              upsy_sfx_squash_croc();
-              fireworks_start(upsy.crocodile.x,upsy.crocodile.y);
-            }
-          } else {
-            if ((dx<=flame->w)&&(dx>0)) {
-              upsy.crocodile.present=0;
-              upsy_sfx_squash_croc();
-              fireworks_start(upsy.crocodile.x,upsy.crocodile.y);
-            }
-          }
+        if (point_in_killbox(x,y,w,h,upsy.crocodile.x,upsy.crocodile.y)) {
+          upsy.crocodile.present=0;
+          upsy_sfx_squash_croc();
+          fireworks_start(upsy.crocodile.x,upsy.crocodile.y);
         }
       }
     }
@@ -85,10 +92,11 @@ void flames_render() {
   struct flame *flame=upsy.flames.v;
   int i=upsy.flames.c;
   for (;i-->0;flame++) {
-    if (!flame->state) continue;
+    if (flame->clock<flame->offtime) continue;
     int dstx=SCENEX+flame->x*TILESIZE;
     int dsty=SCENEY+flame->y*TILESIZE;
-    int srcy=TILESIZE*((flame->state&1)?6:7);
+    int frame=6+(((int)(flame->clock*10.0))&1);
+    int srcy=TILESIZE*frame;
     int srcx=TILESIZE*6;
     if (flame->w<0) {
       int i=-flame->w; for (;i-->0;) {
@@ -97,11 +105,25 @@ void flames_render() {
         gfx_blit(0,upsy.texid_tiles,dstx,dsty,srcx,srcy,TILESIZE,TILESIZE,GFX_XFORM_XREV);
         srcx=TILESIZE*7;
       }
-    } else {
+    } else if (flame->w>0) {
       int i=flame->w; for (;i-->0;) {
         dstx+=TILESIZE;
         if (!i) srcx=TILESIZE*8;
         gfx_blit(0,upsy.texid_tiles,dstx,dsty,srcx,srcy,TILESIZE,TILESIZE,0);
+        srcx=TILESIZE*7;
+      }
+    } else if (flame->h<0) {
+      int i=-flame->h; for (;i-->0;) {
+        dsty-=TILESIZE;
+        if (!i) srcx=TILESIZE*8;
+        gfx_blit(0,upsy.texid_tiles,dstx,dsty,srcx,srcy,TILESIZE,TILESIZE,GFX_XFORM_XREV|GFX_XFORM_SWAP);
+        srcx=TILESIZE*7;
+      }
+    } else if (flame->h>0) {
+      int i=flame->h; for (;i-->0;) {
+        dsty+=TILESIZE;
+        if (!i) srcx=TILESIZE*8;
+        gfx_blit(0,upsy.texid_tiles,dstx,dsty,srcx,srcy,TILESIZE,TILESIZE,GFX_XFORM_SWAP);
         srcx=TILESIZE*7;
       }
     }

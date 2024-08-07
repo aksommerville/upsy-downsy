@@ -17,4 +17,4 @@ Line begins with a keyword, followed by arguments, which can only be decimal int
 | crocodile   | `X Y` |
 | hawk        | (none) |
 | platform    | `X Y W` |
-| flame       | `X Y W` W signed |
+| flame       | `X Y W H PERIOD PHASE` W,H signed |

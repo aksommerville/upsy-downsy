@@ -20,7 +20,7 @@ int cell_solid(int x,int y);
 int cell_solid_below_topsoil(int x,int y); // don't count the topmost row of dirt
 
 int map_add_platform(int x,int y,int w,int tileid);
-int map_add_flamethrower(int x,int y,int w);
+int map_add_flamethrower(int x,int y,int w,int h);
 
 void map_render();
 

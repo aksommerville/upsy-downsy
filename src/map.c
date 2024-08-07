@@ -56,16 +56,18 @@ int map_add_platform(int x,int y,int w,int tileid) {
   return 0;
 }
 
-int map_add_flamethrower(int x,int y,int w) {
+int map_add_flamethrower(int x,int y,int w,int h) {
   if (upsy.map.platformc>=PLATFORM_LIMIT) return -1;
-  if ((x<0)||(x>=COLC)||!w||(y<0)||(y>=ROWC)) return -1;
+  if ((x<0)||(x>=COLC)||(y<0)||(y>=ROWC)) return -1;
   struct platform *platform=upsy.map.platformv+upsy.map.platformc++;
   platform->x=x;
   platform->y=y;
   platform->w=1;
   platform->tileid=0x65;
   if (w<0) platform->xform=GFX_XFORM_XREV;
-  else platform->xform=0;
+  else if (w>0) platform->xform=0;
+  else if (h<0) platform->xform=GFX_XFORM_SWAP|GFX_XFORM_XREV;
+  else if (h>0) platform->xform=GFX_XFORM_SWAP;
   return 0;
 }
 

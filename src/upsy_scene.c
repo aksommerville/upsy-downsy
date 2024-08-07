@@ -122,9 +122,9 @@ static int decode_and_apply_scene(const char *src,int srcc) {
     }
     
     if ((kwc==5)&&!memcmp(kw,"flame",5)) {
-      ASSERTARGC(3)
-      if (map_add_flamethrower(argv[0],argv[1],argv[2])>=0) {
-        flames_add(argv[0],argv[1],argv[2]);
+      ASSERTARGC(6)
+      if (map_add_flamethrower(argv[0],argv[1],argv[2],argv[3])>=0) {
+        flames_add(argv[0],argv[1],argv[2],argv[3],argv[4],argv[5]);
       }
       continue;
     }

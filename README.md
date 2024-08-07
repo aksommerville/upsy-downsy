@@ -18,8 +18,8 @@ Try a 10x10 grid of 6x6-pixel tiles, leaves us 4 pixels for a status bar.
 - - [ ] 2: Sort by difficulty.
 - - [ ] 3: Eliminate ones too similar to others, or that I don't like after playing.
 - - [ ] 4: Repack IDs.
-- [ ] Period and phase for flamethrowers.
-- [ ] Vertical (upward) flamethrowers. Can we use the same object, just add a height attribute?
+- [x] Period and phase for flamethrowers.
+- [x] Vertical (upward) flamethrowers. Can we use the same object, just add a height attribute?
 - [ ] Calibrate scorekeeping, ensure 10k is not reachable.
 - [ ] Revisit margins, I've only made them worse.
 - [ ] Try a cheerier color scheme.

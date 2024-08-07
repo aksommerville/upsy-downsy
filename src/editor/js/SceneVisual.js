@@ -90,15 +90,21 @@ export class SceneVisual {
         x: flame[0] * TILESIZE,
         y: flame[1] * TILESIZE + 20,
         w: flame[2] * TILESIZE,
-        h: 20,
+        h: flame[3] * TILESIZE,
         color: "#f00",
-        command: "flame x y w",
+        command: "flame x y w h period phase",
         model: flame,
       };
       if (clk.w < 0) {
         clk.x += clk.w;
         clk.w = -clk.w + TILESIZE;
       }
+      if (!clk.w) clk.w = 20;
+      if (clk.h < 0) {
+        clk.y += clk.h;
+        clk.h = -clk.h;
+      }
+      clk.h += 20;
       this.clickables.push(clk);
       this.context.fillStyle = clk.color;
       this.context.fillRect(clk.x, clk.y, clk.w, clk.h);
@@ -220,7 +226,7 @@ export class SceneVisual {
           this.sceneDirty();
           this.renderSoon();
         } break;
-      case "flame x y w": {
+      case "flame x y w h period phase": {
           if (this.dragShift) {
             this.drag.model[2] += dx;
           } else {

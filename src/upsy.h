@@ -5,14 +5,14 @@
 #define COLC 10
 #define ROWC 10
 
-#define SCREENW 64
+#define SCREENW 60
 #define SCREENH 64
 
 /* The proper scene is 60x60. Centered horizontally, at the bottom of our 64x64 framebuffer.
  * Those left and right margins go to waste.
  * Top margin, we can draw status on it.
  */
-#define SCENEX 2
+#define SCENEX 0
 #define SCENEY 4
 
 // We can have pbltool generate a header with macros for the custom types and resource names, but meh.
@@ -38,7 +38,7 @@
  * Don't do that in prod! But it's very helpful while adding new scenes.
  * Also causes us to skip the hello splash.
  */
-#define BACKWARD_SCENES 1
+#define BACKWARD_SCENES 0
 
 extern struct upsy {
   int pvinput;

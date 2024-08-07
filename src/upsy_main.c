@@ -23,7 +23,7 @@ static int load_image(int imageid) {
 }
 
 int pbl_client_init(int fbw,int fbh,int rate,int chanc) {
-  if ((fbw!=64)||(fbh!=64)) return -1;
+  if ((fbw!=SCREENW)||(fbh!=SCREENH)) return -1;
   pbl_set_synth_limit(sizeof(upsy.audio)/sizeof(upsy.audio[0]));
   if (rom_init()<0) return -1;
   if (gfx_init(fbw,fbh)<0) return -1;
@@ -153,7 +153,7 @@ void *pbl_client_render() {
   if (upsy.sceneid) {
     render_scene();
   } else {
-    gfx_blit(0,upsy.texid_title,0,0,0,0,64,64,0);
+    gfx_blit(0,upsy.texid_title,0,0,0,0,SCREENW,SCREENH,0);
     char msg[10]="LAST: 0000";
     msg[6]='0'+upsy.score/1000;
     msg[7]='0'+(upsy.score/100)%10;

@@ -238,11 +238,15 @@ void rabbit_update(double elapsed) {
       upsy.victoryclock=0.001;
       upsy_sfx_victory();
       upsy.rabbit.frame=0;
-      upsy.clear_bonus=50;
-      if (upsy.stagetime<10.0) upsy.time_bonus=100;
-      else upsy.time_bonus=0;
+      
+      // Scoring:
+      pbl_log("scene:%d %f",upsy.sceneid,upsy.stagetime);
+      upsy.clear_bonus=20;
+      if (upsy.stagetime<upsy.map.timetarget) {
+        upsy.time_bonus=100+(int)(((upsy.map.timetarget-upsy.stagetime)*200.0)/upsy.map.timetarget);
+      } else upsy.time_bonus=0;
       if (upsy.mortc) upsy.death_bonus=0;
-      else upsy.death_bonus=100;
+      else upsy.death_bonus=30;
     }
   }
 }

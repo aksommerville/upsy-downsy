@@ -18,3 +18,4 @@ Line begins with a keyword, followed by arguments, which can only be decimal int
 | hawk        | (none) |
 | platform    | `X Y W` |
 | flame       | `X Y W H PERIOD PHASE` W,H signed |
+| time        | `MS`, anything less yields a bonus. |

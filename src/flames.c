@@ -40,10 +40,14 @@ static void flames_calculate_killbox(double *x,double *y,double *w,double *h,con
   *x=flame->x;
   *y=flame->y;
   *w=*h=1.0;
-  if (flame->w<0) { (*x)+=flame->w; (*w)-=flame->w-1.0; }
+  if (flame->w<0) { (*x)+=flame->w; (*w)-=flame->w; }
   else if (flame->w>0) (*w)+=flame->w-1.0;
-  if (flame->h<0) { (*y)+=flame->h; (*h)-=flame->h-1.0; }
+  if (flame->h<0) { (*y)+=flame->h; (*h)-=flame->h; }
   else if (flame->h>0) (*h)+=flame->h-1.0;
+  (*x)+=0.125;
+  (*y)+=0.125;
+  (*w)-=0.250;
+  (*h)-=0.250;
 }
 
 static inline int point_in_killbox(double x,double y,double w,double h,double qx,double qy) {

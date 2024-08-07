@@ -12,6 +12,7 @@ struct map {
     uint8_t tileid,xform;
   } platformv[PLATFORM_LIMIT];
   int platformc;
+  double timetarget;
 };
 
 int tile_is_dirt(uint8_t tileid);

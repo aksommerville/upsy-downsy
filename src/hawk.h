@@ -8,7 +8,6 @@ struct hawk {
   double animclock;
   int frame;
   int attack;
-  double atkdx,atkdy;
 };
 
 void hawk_update(double elapsed);

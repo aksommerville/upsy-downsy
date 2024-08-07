@@ -225,16 +225,18 @@ void render_scene() {
   gfx_fill_rect(0,0,0,SCREENW,SCENEY,0);
   
   { // Status row.
-    char msg[14]="##/##     ####";
+    char msg[5];
     msg[0]='0'+upsy.sceneid/10;
     msg[1]='0'+upsy.sceneid%10;
+    msg[2]='/';
     msg[3]='0'+upsy.scenec/10;
     msg[4]='0'+upsy.scenec%10;
-    msg[10]='0'+upsy.score/1000;
-    msg[11]='0'+(upsy.score/100)%10;
-    msg[12]='0'+(upsy.score/10)%10;
-    msg[13]='0'+upsy.score%10;
-    upsy_render_text(1,0,msg,sizeof(msg));
+    upsy_render_text(1,0,msg,5);
+    msg[0]='0'+upsy.score/1000;
+    msg[1]='0'+(upsy.score/100)%10;
+    msg[2]='0'+(upsy.score/10)%10;
+    msg[3]='0'+upsy.score%10;
+    upsy_render_text(SCREENW-16,0,msg,4);
   }
   
   if (upsy.victoryclock>0.0) { // Victory stats, if play is complete.

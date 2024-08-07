@@ -240,7 +240,6 @@ void rabbit_update(double elapsed) {
       upsy.rabbit.frame=0;
       
       // Scoring:
-      pbl_log("scene:%d %f",upsy.sceneid,upsy.stagetime);
       upsy.clear_bonus=20;
       if (upsy.stagetime<upsy.map.timetarget) {
         upsy.time_bonus=100+(int)(((upsy.map.timetarget-upsy.stagetime)*200.0)/upsy.map.timetarget);

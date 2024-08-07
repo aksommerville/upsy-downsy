@@ -1,7 +1,8 @@
-dirt 6 4 4 5 5 5 5 4 4 4
-rabbit 1 5
-carrot 8 5
+dirt 2 6 6 6 1 1 6 6 6 2
+rabbit 1 3
+carrot 4 8
 song 1
-crocodile 5 4
-hammer 0 4 5000 1000
-time 15000
+flame 0 7 4 0 2000 0
+flame 9 7 -3 0 2000 0
+platform 4 7 2
+time 8000

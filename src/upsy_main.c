@@ -54,6 +54,7 @@ int pbl_client_init(int fbw,int fbh,int rate,int chanc) {
     pbl_log("*** BACKWARD_SCENES enabled. Don't release like this! ***");
     prepare_scene(upsy.scenec);
   #endif
+  prepare_scene(18);
   
   return 0;
 }

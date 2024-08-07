@@ -1,7 +1,8 @@
-dirt 2 2 2 1 1 1 1 2 2 2
-rabbit 1 7
-carrot 8 7
+dirt 6 4 4 4 4 1 1 1 1 1
+rabbit 7 8
+carrot 1 4
 song 1
-crocodile 5 8
-platform 0 3 3
-time 16000
+flame 1 5 4 0 2000 0
+platform 5 5 5
+crocodile 7 4
+time 12000

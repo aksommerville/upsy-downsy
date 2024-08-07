@@ -16,7 +16,7 @@ void hawk_update(double elapsed) {
     upsy.hawk.attack=0;
   }
   
-  if (upsy.rabbit.state==RABBIT_STATE_DEAD) {
+  if ((upsy.rabbit.state==RABBIT_STATE_DEAD)||(upsy.victoryclock>0.0)) {
     // Stay put but do continue animating.
   
   } else if (upsy.hawk.attack) {

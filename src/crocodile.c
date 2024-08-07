@@ -6,9 +6,9 @@
  
 static int crocodile_collision(int solid_only) {
   if (upsy.crocodile.dx<0.0) {
-    if (upsy.crocodile.x<1.0) return 1;
+    if (upsy.crocodile.x<0.5) return 1;
   } else {
-    if (upsy.crocodile.x>COLC-1.0) return 1;
+    if (upsy.crocodile.x>COLC-0.5) return 1;
   }
   
   /* Check for dirt on my row, and also gaps on the row below.

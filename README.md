@@ -18,9 +18,7 @@ Try a 10x10 grid of 6x6-pixel tiles, leaves us 4 pixels for a status bar.
 - - [ ] 2: Sort by difficulty.
 - - [ ] 3: Eliminate ones too similar to others, or that I don't like after playing.
 - - [ ] 4: Repack IDs.
-- [x] Period and phase for flamethrowers.
-- [x] Vertical (upward) flamethrowers. Can we use the same object, just add a height attribute?
 - [ ] Calibrate scorekeeping, ensure 10k is not reachable.
-- [ ] Revisit margins, I've only made them worse.
-- [ ] Try a cheerier color scheme.
+- [x] Revisit margins, I've only made them worse. ...back to black. Maybe change the itch page to match.
+- [x] Try a cheerier color scheme. ...only background color, seems really to make a difference.
 - [ ] Decoration and verbiage for Itch page.

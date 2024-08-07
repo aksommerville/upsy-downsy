@@ -50,6 +50,11 @@ int pbl_client_init(int fbw,int fbh,int rate,int chanc) {
   const void *dummy;
   while (rom_get(&dummy,PBL_TID_scene,upsy.scenec+1)>0) upsy.scenec++;
   
+  #if BACKWARD_SCENES
+    pbl_log("*** BACKWARD_SCENES enabled. Don't release like this! ***");
+    prepare_scene(upsy.scenec);
+  #endif
+  
   return 0;
 }
 
@@ -103,7 +108,11 @@ void pbl_client_update(double elapsed,int in1,int in2,int in3,int in4) {
         upsy.mortc=0;
         upsy.stagetime=0.0;
         upsy.victoryclock=0.0;
-        if (prepare_scene(upsy.sceneid+1)<0) {
+        int d=1;
+        #if BACKWARD_SCENES
+          d=-1;
+        #endif
+        if (prepare_scene(upsy.sceneid+d)<0) {
           pbl_terminate(1);
         }
       }

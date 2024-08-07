@@ -34,6 +34,12 @@
 #include "flames.h"
 #include <stdint.h>
 
+/* Nonzero to start at the last scene and advance backward to 1.
+ * Don't do that in prod! But it's very helpful while adding new scenes.
+ * Also causes us to skip the hello splash.
+ */
+#define BACKWARD_SCENES 1
+
 extern struct upsy {
   int pvinput;
   int sceneid;

@@ -28,14 +28,6 @@ static double rabbit_measure_freedom(int dx,int dy) {
         double distance=upsy.rabbit.y-upsy.hammer.h;
         if (distance<freedom) freedom=distance;
       }
-    } else if (upsy.hammer.h>upsy.rabbit.y) {
-      if (dx<0) {
-        double distance=upsy.rabbit.x-0.45-(double)(upsy.hammer.x+upsy.hammer.w);
-        if ((distance>-1.0)&&(distance<freedom)) freedom=distance;
-      } else if (dx>0) {
-        double distance=(double)upsy.hammer.x-upsy.rabbit.x-0.45;
-        if ((distance>-1.0)&&(distance<freedom)) freedom=distance;
-      }
     }
   }
    
@@ -126,30 +118,12 @@ static double rabbit_measure_road(int dx) {
 static void rabbit_examine_road() {
   double lfree=rabbit_measure_road(-1);
   double rfree=rabbit_measure_road(1);
-  if (lfree+rfree>1.5) {
+  if (lfree+rfree>=1.0) {
     upsy.rabbit.state=RABBIT_STATE_WALK;
     upsy.rabbit.xlo=upsy.rabbit.x-lfree;
     upsy.rabbit.xhi=upsy.rabbit.x+rfree;
   } else {
     upsy.rabbit.state=RABBIT_STATE_CHILL;
-  }
-}
-
-/* Rabbit has been squashed. Blood will appear at his feet.
- * Find the column that squashed me, and center on it, so we don't show blood dripping down from nowhere.
- */
- 
-static void rabbit_amend_position_for_death() {
-  int footrow=(int)(upsy.rabbit.y+1.0);
-  int footextent=ROWC-footrow;
-  int nearcol=(int)(upsy.rabbit.x);
-  const uint8_t *b=upsy.map.dirt;
-  if ((nearcol>=0)&&(nearcol<COLC)&&(upsy.map.dirt[nearcol]==footextent)) {
-    upsy.rabbit.x=nearcol+0.5;
-  } else if ((nearcol>=1)&&(upsy.map.dirt[nearcol-1]==footextent)) {
-    upsy.rabbit.x=nearcol-0.5;
-  } else if ((nearcol<COLC-1)&&(upsy.map.dirt[nearcol+1]==footextent)) {
-    upsy.rabbit.x=nearcol+1.5;
   }
 }
 
@@ -160,7 +134,6 @@ void rabbit_squash() {
   upsy_sfx_squash();
   upsy_play_song(3);
   fireworks_start(upsy.rabbit.x,upsy.rabbit.y);
-  rabbit_amend_position_for_death();
   upsy.rabbit.state=RABBIT_STATE_DEAD;
   upsy.rabbit.frame=0;
   upsy.rabbit.animclock=0.200;

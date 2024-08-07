@@ -15,14 +15,11 @@ static int crocodile_collision(int solid_only) {
    */
   int y=(int)(upsy.crocodile.y);
   if (y<0) y=0; else if (y>=ROWC) y=ROWC-1;
-  int xa=(int)(upsy.crocodile.x-0.75);
-  int xz=(int)(upsy.crocodile.x+0.75);
-  if (xa<0) xa=0;
-  if (xz>=COLC) xz=COLC-1;
-  if (xz<xa) xz=xa;
-  if (cell_solid(xa,y)||cell_solid(xz,y)) return 1;
+  int x=(int)(upsy.crocodile.x);
+  if (x<0) x=0; else if (x>=COLC) x=COLC-1;
+  if (cell_solid(x,y)) return 1;
   if (!solid_only&&(y<ROWC-1)) {
-    if (!cell_solid(xa,y+1)||!cell_solid(xz,y+1)) return 1;
+    if (!cell_solid(x,y+1)) return 1;
   }
 
   return 0;

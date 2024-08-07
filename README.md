@@ -8,6 +8,3 @@ You'll have to clone and build that first, if you want to build Upsy-Downsy from
 
 Help the rabbit reach his carrot by raising or lowering columns of earth.
 
-## TODO
-
-- [ ] Decoration and verbiage for Itch page.

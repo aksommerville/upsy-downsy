@@ -7,6 +7,9 @@ PEBBLE_SDK:=../pebble/
 
 PBLTOOL:=$(PEBBLE_SDK)/out/pbltool/pbltool
 
+# Set this empty to build a real ROM, or non-empty to only build the native executable.
+NATIVE_ONLY:=
+
 CC_WASM:=clang --target=wasm32 -c -O3 -MMD -nostdlib -Isrc -I$(PEBBLE_SDK)/src -Wno-comment -Wno-incompatible-library-redeclaration -Wno-parentheses
 LD_WASM:=$(firstword $(shell which wasm-ld wasm-ld-11)) \
   --no-entry -z stack-size=4194304 --no-gc-sections --allow-undefined --export-table \
@@ -33,11 +36,17 @@ ROM:=out/upsy-downsy.pbl
 HTML:=out/upsy-downsy.html
 EXE_TRUE:=out/upsy-downsy.true
 EXE_FAKE:=out/upsy-downsy.fake
-all:$(ROM) $(HTML) $(EXE_TRUE) $(EXE_FAKE)
-$(ROM):$(LIB_WASM) $(DATAFILES);$(PRECMD) $(PBLTOOL) pack -o$@ $(LIB_WASM) src/data
-$(HTML):$(ROM);$(PRECMD) $(PBLTOOL) bundle -o$@ $(ROM)
-$(EXE_TRUE):$(ROM) $(LIB_NATIVE);$(PRECMD) $(PBLTOOL) bundle -o$@ $(ROM) $(LIB_NATIVE)
-$(EXE_FAKE):$(ROM);$(PRECMD) $(PBLTOOL) bundle -o$@ $(ROM)
+ifneq (,$(NATIVE_ONLY))
+  all:$(ROM) $(EXE_TRUE)
+  $(ROM):$(DATAFILES);$(PRECMD) $(PBLTOOL) pack -o$@ src/data
+  $(EXE_TRUE):$(ROM) $(LIB_NATIVE);$(PRECMD) $(PBLTOOL) bundle -o$@ $(ROM) $(LIB_NATIVE)
+else
+  all:$(ROM) $(HTML) $(EXE_TRUE) $(EXE_FAKE)
+  $(ROM):$(LIB_WASM) $(DATAFILES);$(PRECMD) $(PBLTOOL) pack -o$@ $(LIB_WASM) src/data
+  $(HTML):$(ROM);$(PRECMD) $(PBLTOOL) bundle -o$@ $(ROM)
+  $(EXE_TRUE):$(ROM) $(LIB_NATIVE);$(PRECMD) $(PBLTOOL) bundle -o$@ $(ROM) $(LIB_NATIVE)
+  $(EXE_FAKE):$(ROM);$(PRECMD) $(PBLTOOL) bundle -o$@ $(ROM)
+endif
 
 #run:$(ROM);$(PEBBLE_SDK)/out/linux/pebble $(ROM)
 run:$(EXE_TRUE);$(EXE_TRUE)

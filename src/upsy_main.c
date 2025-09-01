@@ -102,6 +102,7 @@ void pbl_client_update(double elapsed,int in1,int in2,int in3,int in4) {
   upsy.totalclock+=elapsed;
   in1|=in2|in3|in4;
   if (in1!=upsy.pvinput) {
+    if (in1&(PBL_BTN_AUX3|PBL_BTN_AUX2)) pbl_terminate(0);
     if (upsy.sceneid&&(upsy.victoryclock>0.0)) {
       if ((in1&PBL_BTN_SOUTH)&&!(upsy.pvinput&PBL_BTN_SOUTH)) {
         upsy_apply_scores(999.0);

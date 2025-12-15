@@ -1,0 +1,6 @@
+dirt 8 8 8 8 4 4 4 4 8 8
+rabbit 1 1
+carrot 8 1
+song (u16)2
+hammer 4 4 (u16)4000 (u16)0
+time (u16)12000

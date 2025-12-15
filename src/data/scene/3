@@ -1,0 +1,6 @@
+dirt 3 3 3 3 2 3 3 3 3 3
+rabbit 7 6
+carrot 2 6
+song (u16)1
+flame 4 7 0 -5 (u16)0 (u16)0
+time (u16)12000

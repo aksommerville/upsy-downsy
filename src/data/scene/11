@@ -1,0 +1,7 @@
+dirt 1 1 1 1 2 1 1 2 4 4
+rabbit 2 8
+carrot 2 3
+song (u16)2
+hammer 5 5 (u16)3000 (u16)0
+platform 0 4 5
+time (u16)12000

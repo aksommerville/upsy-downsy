@@ -3,6 +3,26 @@ all:
 .SECONDARY:
 PRECMD=echo "  $@" ; mkdir -p $(@D) ;
 
+ifeq (,$(EGG2_SDK))
+  EGG2_SDK:=../egg2
+endif
+EGGDEV:=$(EGG2_SDK)/out/eggdev
+
+all:;$(EGGDEV) build
+clean:;rm -rf mid out
+run:;$(EGGDEV) run
+web-run:all;$(EGGDEV) serve --htdocs=out/upsy-downsy-web.zip --project=.
+edit:;$(EGGDEV) serve \
+  --htdocs=/data:src/data \
+  --htdocs=EGG_SDK/src/web \
+  --htdocs=EGG_SDK/src/editor \
+  --htdocs=src/editor \
+  --htdocs=/synth.wasm:EGG_SDK/out/web/synth.wasm \n  --htdocs=/build:out/upsy-downsy-web.zip \
+  --htdocs=/out:out \
+  --writeable=src/data \
+  --project=.
+
+ifeq (,ignore-pebble) #XXX
 PEBBLE_SDK:=../pebble/
 
 PBLTOOL:=$(PEBBLE_SDK)/out/pbltool/pbltool
@@ -52,3 +72,5 @@ endif
 run:$(EXE_TRUE);$(EXE_TRUE)
 edit:;node src/editor/main.js
 clean:;rm -r mid out
+
+endif

@@ -1,0 +1,7 @@
+dirt 6 4 4 5 5 5 5 4 4 4
+rabbit 1 5
+carrot 8 5
+song (u16)2
+crocodile 5 4
+hammer 0 4 (u16)5000 (u16)1000
+time (u16)15000
